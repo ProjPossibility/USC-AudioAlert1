@@ -1,9 +1,7 @@
 package ss12.usc.audioalert;
 
 import android.app.Activity;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder.AudioSource;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -14,7 +12,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        int channel_config = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+        /* @SuppressWarnings("deprecation")
+		int channel_config = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 		int format = AudioFormat.ENCODING_PCM_16BIT;
 		int sampleSize = 8000;
 		int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
@@ -22,7 +21,9 @@ public class MainActivity extends Activity {
 		
 		short[] audioBuffer = new short[bufferSize];
 		audioInput.startRecording();
-		audioInput.read(audioBuffer, 0, bufferSize);
+		audioInput.read(audioBuffer, 0, bufferSize); */
+
+		Intent intent = new Intent(this, DisplayMessageActivity.class);
     }
 
     @Override
