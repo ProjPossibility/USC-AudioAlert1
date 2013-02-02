@@ -1,7 +1,10 @@
 package ss12.usc.audioalert;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder.AudioSource;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
@@ -10,6 +13,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        int channel_config = AudioFormat.CHANNEL_CONFIGURATION_MONO;
+		int format = AudioFormat.ENCODING_PCM_16BIT;
+		int sampleSize = 8000;
+		int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
+		AudioRecord audioInput = new AudioRecord(AudioSource.MIC, sampleSize, channel_config, format, bufferSize);
     }
 
     @Override
