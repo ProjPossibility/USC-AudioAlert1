@@ -21,7 +21,7 @@ public class Alert extends Activity {
 //****************//		
 		int channel_config = AudioFormat.CHANNEL_IN_MONO;
 		int format = AudioFormat.ENCODING_PCM_16BIT;
-		int sampleSize = 8000;
+		int sampleSize= 8000;
 		int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
 		AudioRecord audioInput = new AudioRecord(AudioSource.MIC, sampleSize, channel_config, format, bufferSize);
 
