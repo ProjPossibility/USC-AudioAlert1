@@ -11,6 +11,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="36dp"
         android:onClick="sendMessage"
-        android:text="BUTTON" />
+        android:text="@string/button_send" />
 
 </RelativeLayout>
