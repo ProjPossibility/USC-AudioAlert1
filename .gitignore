@@ -57,7 +57,7 @@ local.properties
 .settings/
 .loadpath
 
-gen/*
+gen/**
 
 # External tool builders
 .externalToolBuilders/
