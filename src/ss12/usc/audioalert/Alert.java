@@ -1,19 +1,23 @@
 package ss12.usc.audioalert;
 
 import android.app.Activity;
-import android.media.AudioFormat;
-import android.media.AudioRecord;
-import android.media.MediaRecorder.AudioSource;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.Menu;
 
 public class Alert extends Activity {
-
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert);
 		
+		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+		long[] _pattern = new long[]{0,300,0,300,0,300};
+		v.vibrate(_pattern, 1);
 	}
 
 	@Override
