@@ -30,9 +30,8 @@ public class MainActivity extends Activity {
     
     public void sendMessage(View view) {
 	    Intent intent = new Intent(this, Alert.class);
-	    EditText editText = (EditText) findViewById(R.id.edit_message);
-	    String message = "This is my string, hear me roar.";
-	    intent.putExtra(EXTRA_MESSAGE, message);
+	    //String message = "This is my string, hear me roar.";
+	    //intent.putExtra(EXTRA_MESSAGE, message);
 	    startActivity(intent);
     }
     

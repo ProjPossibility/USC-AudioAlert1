@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
+import android.widget.TextView;
 
 
 public class Alert extends Activity {
@@ -16,20 +17,20 @@ public class Alert extends Activity {
 		setContentView(R.layout.activity_alert);
 		
 		Intent intent = getIntent();
-		String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+		//String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 		
-		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		//Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
-		long[] _pattern = new long[]{0,300,0,300,0,300};
-		v.vibrate(_pattern, -1);		
+		//long[] _pattern = new long[]{0,300,0,300,0,300};
+		//v.vibrate(_pattern, -1);		
 		
 	    // Create the text view
-	    TextView textView = new TextView(this);
-	    textView.setTextSize(40);
-	    textView.setText(message);
+	    //TextView textView = new TextView(this);
+	    //textView.setTextSize(40);
+	    //textView.setText(message);
 
 	    // Set the text view as the activity layout
-	    setContentView(textView);
+	    //setContentView(textView);
 	}
 
 	@Override
