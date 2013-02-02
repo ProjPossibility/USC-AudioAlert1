@@ -17,7 +17,7 @@ public class Alert extends Activity {
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		long[] _pattern = new long[]{0,300,0,300,0,300};
-		v.vibrate(_pattern, 1);
+		v.vibrate(_pattern, -1);
 	}
 
 	@Override
