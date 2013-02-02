@@ -1,7 +1,10 @@
 package ss12.usc.audioalert;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder.AudioSource;
+import android.os.Bundle;
 import android.view.Menu;
 
 public class Alert extends Activity {
@@ -10,6 +13,7 @@ public class Alert extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert);
+		
 	}
 
 	@Override

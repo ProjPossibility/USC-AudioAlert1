@@ -19,6 +19,10 @@ public class MainActivity extends Activity {
 		int sampleSize = 8000;
 		int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
 		AudioRecord audioInput = new AudioRecord(AudioSource.MIC, sampleSize, channel_config, format, bufferSize);
+		
+		short[] audioBuffer = new short[bufferSize];
+		audioInput.startRecording();
+		audioInput.read(audioBuffer, 0, bufferSize);
     }
 
     @Override
