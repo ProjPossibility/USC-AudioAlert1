@@ -5,10 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.TextView;
 
 
 public class Alert extends Activity {
@@ -25,13 +23,13 @@ public class Alert extends Activity {
         //startActivity();
 				
 		int alertType = getIntent().getExtras().getInt("alert-id");
-		String soundSequence = getIntent().getExtras().getString("seq");
+		//String soundSequence = getIntent().getExtras().getString("seq");
 		// Log.i("Alert", "Printing " + soundSequence);
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
-		TextView tv = (TextView)findViewById(R.id.textView1);
-		tv.setText(soundSequence);
+		//TextView tv = (TextView)findViewById(R.id.textView1);
+		//tv.setText(soundSequence);
 		
 		long[] _pattern = new long[]{0,100,50,100,50,100};
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
@@ -47,8 +45,17 @@ public class Alert extends Activity {
 	}
     
     public void okayStop(View view) {
-    	v.cancel();
+
+		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		long[] stopthis = new long[]{0,0};
+		v.vibrate(stopthis,0);
     	
+		finish();
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();  // Always call the superclass
 	    Intent intent = new Intent(this, MainActivity.class);
 	    startActivity(intent);
     }

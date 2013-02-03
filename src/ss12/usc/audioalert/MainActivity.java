@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.widget.TextView;
 
 // code for checking for finding a valid AudioRecord comes from this source:
 // http://stackoverflow.com/questions/4843739/audiorecord-object-not-initializing
@@ -22,12 +21,29 @@ public class MainActivity extends Activity {
     public final static int NUM_TOP_MAGNITUDES = 10;
 	int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
     String shortSequence;
+    int alerttype;
     
-    @Override    
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // The activity is being created.
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+        return true;
+    }    
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // The activity is about to become visible.
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
         
+
 		AudioRecord recorder = null;	
 		for (int rate : mSampleRates) {
 	        for (short audioFormat : new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT }) {
@@ -58,14 +74,14 @@ public class MainActivity extends Activity {
 			
 			byte[] audioBuffer = new byte[bufferSize];
 			
-			TextView tv_status = (TextView)findViewById(R.id.textView_status);
-			tv_status.setText("LISTENING HAS STARTED\n");
+			//TextView tv_status = (TextView)findViewById(R.id.textView_status);
+			//tv_status.setText("LISTENING HAS STARTED\n");
 			
 			recorder.startRecording();
 			Log.i("MainActivity", "Started recording!");
 			recorder.read(audioBuffer, 0, bufferSize);
 			recorder.stop();
-			tv_status.setText("" + tv_status.getText() + "LISTENING HAS STOPPED");
+			//tv_status.setText("" + tv_status.getText() + "LISTENING HAS STOPPED");
 			
 			int newBufferSize = 1;
 			while(newBufferSize < bufferSize)
@@ -98,40 +114,6 @@ public class MainActivity extends Activity {
 		    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
 		    }
 		    
-		    /*
-		    FreqMag[] max = new FreqMag[NUM_TOP_MAGNITUDES];
-		    double smallestMax = Double.MAX_VALUE;
-		    int indSM = -1;
-		    for(int i = 0; i < fm_array.length; i++)
-		    {
-		    	double theMag = fm_array[i].mag;
-		    	if(i < NUM_TOP_MAGNITUDES)
-		    	{
-		    		max[i] = fm_array[i];
-		    		if(smallestMax > theMag)
-		    		{
-		    			smallestMax = theMag;
-		    			indSM = i;
-		    		}
-		    	}
-		    	else
-	    		{
-		    		if(smallestMax < theMag)
-		    		{
-		    			max[indSM] = new FreqMag(getFreq(i, sampleSize, fftArray.length), theMag);
-		    			smallestMax = Double.MAX_VALUE;
-		    			for(int j = 0; j < max.length; j++)
-		    			{
-	    		    		if(smallestMax > max[j].mag)
-	    		    		{
-	    		    			smallestMax = max[j].mag;
-	    		    			indSM = j;
-	    		    		}
-		    			}
-		    		}
-	    		}
-		    }
-		    */
 		    
 		    FreqMag[] debug_mags = new FreqMag[fm_array.length];
 		    for(int a = 0; a < debug_mags.length; a++)
@@ -151,32 +133,34 @@ public class MainActivity extends Activity {
 			Log.i("AFTER CONVERSION", doubleSequence);
 		}
     }
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
-    }
+
     
     public void sendMessage(View view) {
-    	finish();
+	    Intent intent = new Intent(this, Alert.class);
+	    intent.putExtra("alert-id", alerttype);
+	    startActivity(intent);
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Another activity is taking focus (this activity is about to be "paused").
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // The activity is no longer visible (it is now "stopped")
+    }    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();  // Always call the superclass
     }
     
     public double getFreq(int index, int fs, int N)
     {
     	return index * fs / (N * 1.0);
     }
-    
-    @Override
-    public void onDestroy() {
-        super.onDestroy();  // Always call the superclass
 
-	    Intent intent = new Intent(this, Alert.class);
-	    intent.putExtra("alert-id", 2);
-	    Log.i("MainActivity", "Printing " + shortSequence);
-	    intent.putExtra("seq", shortSequence);
-	    startActivity(intent);
-    }
 }
 
 class FreqMag implements Comparable<FreqMag>
