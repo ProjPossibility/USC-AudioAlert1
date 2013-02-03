@@ -8,6 +8,7 @@ import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -42,7 +43,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        
 
 		AudioRecord recorder = null;	
 		for (int rate : mSampleRates) {
@@ -67,75 +67,101 @@ public class MainActivity extends Activity {
 		if(recorder != null)
 		{
 			Log.d("MainActivity", "LOLOLOL IT WORKS :D");
-			int sampleSize = recorder.getSampleRate();
-			int channel_config = recorder.getChannelConfiguration();
-			int format = recorder.getAudioFormat();
-			int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
+
+			boolean foundAlert = false;
+			final AudioRecord recorderFinal = recorder;
 			
-			byte[] audioBuffer = new byte[bufferSize];
-			
-			//TextView tv_status = (TextView)findViewById(R.id.textView_status);
-			//tv_status.setText("LISTENING HAS STARTED\n");
-			
-			recorder.startRecording();
-			Log.i("MainActivity", "Started recording!");
-			recorder.read(audioBuffer, 0, bufferSize);
-			recorder.stop();
-			//tv_status.setText("" + tv_status.getText() + "LISTENING HAS STOPPED");
-			
-			int newBufferSize = 1;
-			while(newBufferSize < bufferSize)
-				newBufferSize *= 2;
-			double[] micBufferData = new double[newBufferSize];
-		    final int bytesPerSample = 2; // As it is 16bit PCM
-		    final double amplification = 100.0; // choose a number as you like
-		    for (int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
-		        double sample = 0;
-		        for (int b = 0; b < bytesPerSample; b++) {
-		            int v = audioBuffer[index + b];
-		            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
-		                v &= 0xFF;
-		            }
-		            sample += v << (b * 8);
-		        }
-		        double sample32 = amplification * (sample / 32768.0);
-		        micBufferData[floatIndex] = sample32;
-		    }
-		    Complex[] fftTempArray = new Complex[newBufferSize];
-		    for (int i=0; i<newBufferSize; i++)
-		    {
-		        fftTempArray[i] = new Complex(micBufferData[i], 0);
-		    }
-		    Complex[] fftArray = FFT.fft(fftTempArray);
-		    FreqMag[] fm_array = new FreqMag[fftArray.length];
-		    for(int i = 0; i < fm_array.length; i++)
-		    {
-		    	Complex what = fftArray[i];
-		    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
-		    }
-		    
-		    
-		    FreqMag[] debug_mags = new FreqMag[fm_array.length];
-		    for(int a = 0; a < debug_mags.length; a++)
-		    	debug_mags[a] = fm_array[a];
-		    Arrays.sort(debug_mags);
-		    String debug_largestMags = " ";
-		    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
-		    	debug_largestMags += debug_mags[a].toString() + "\n";
-		    Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
-		    
-			shortSequence = "Sequence:";
-			for(short s : audioBuffer)
+			while(!foundAlert)
 			{
-				shortSequence += " " + s;
+				int sampleSize = recorder.getSampleRate();
+				int channel_config = recorder.getChannelConfiguration();
+				int format = recorder.getAudioFormat();
+				int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
+				
+				byte[] audioBuffer = new byte[bufferSize];
+	
+				Log.i("MainActivity", "Started recording at time " + System.currentTimeMillis() + "!");
+				
+				Handler recordTimer = new Handler();
+				Runnable r = new Runnable() {
+					public void run() {
+						Log.i("MainActivity", "Stopped recording at time " + System.currentTimeMillis() + "!");
+						recorderFinal.stop();
+						recorderFinal.release();
+					}
+				};
+				
+				recorder.startRecording();
+				recordTimer.postDelayed(r, 500);
+				recorder.read(audioBuffer, 0, bufferSize);
+				
+				int newBufferSize = 1;
+				while(newBufferSize < bufferSize)
+					newBufferSize *= 2;
+				double[] micBufferData = new double[newBufferSize];
+			    final int bytesPerSample = 2; // As it is 16bit PCM
+			    final double amplification = 100.0;
+			    for (int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
+			        double sample = 0;
+			        for (int b = 0; b < bytesPerSample; b++) {
+			            int v = audioBuffer[index + b];
+			            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
+			                v &= 0xFF;
+			            }
+			            sample += v << (b * 8);
+			        }
+			        double sample32 = amplification * (sample / 32768.0);
+			        micBufferData[floatIndex] = sample32;
+			    }
+			    
+			    Complex[] fftTempArray = new Complex[newBufferSize];
+			    for (int i=0; i<newBufferSize; i++)
+			        fftTempArray[i] = new Complex(micBufferData[i], 0);
+			    Complex[] fftArray = FFT.fft(fftTempArray);
+			    
+			    FreqMag[] fm_array = new FreqMag[fftArray.length];
+			    for(int i = 0; i < fm_array.length; i++)
+			    {
+			    	Complex what = fftArray[i];
+			    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
+			    }
+			    
+			    FreqMag[] largestMags = new FreqMag[fm_array.length];
+			    for(int a = 0; a < largestMags.length; a++)
+			    	largestMags[a] = fm_array[a];
+			    Arrays.sort(largestMags);
+
+			    double limLowerA = 1000;
+			    double limUpperA = 1500;
+			    int ACount = 0; // alarm type: police siren
+			    
+			    double limLowerB = 600;
+			    double limUpperB = 1200;
+			    int BCount = 0;	// alarm type: tornado warning
+			    
+			    int threshold = 2;
+			    
+			    String debug_largestMags = " ";
+			    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
+			    {
+			    	double theMag = largestMags[a].mag;
+			    	if(theMag >= limLowerA && theMag <= limUpperA)
+			    		ACount++;
+			    	if(theMag >= limLowerB && theMag <= limUpperB)
+			    		BCount++;
+			    	debug_largestMags += largestMags[a].toString() + "\n";
+			    }
+			    Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
+			    
+			    if(ACount >= threshold)
+			    	sendMessage(1);
+			    else if(BCount >= threshold)
+			    	sendMessage(2);
 			}
-			String doubleSequence = "";
-			Log.i("AFTER CONVERSION", doubleSequence);
 		}
     }
-
     
-    public void sendMessage(View view) {
+    public void sendMessage(int alertType) {
 	    Intent intent = new Intent(this, Alert.class);
 	    intent.putExtra("alert-id", alerttype);
 	    startActivity(intent);
