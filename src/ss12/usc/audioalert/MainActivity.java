@@ -53,16 +53,59 @@ public class MainActivity extends Activity {
 			int format = recorder.getAudioFormat();
 			int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
 			
-			short[] audioBuffer = new short[bufferSize];
+			byte[] audioBuffer = new byte[bufferSize];
 			recorder.startRecording();
 			recorder.read(audioBuffer, 0, bufferSize);
 			recorder.stop();
 			
+			/*
+			 * FFT analysis here
+			 * Source:
+			 *	http://stackoverflow.com/questions/5774104/
+			 *	android-audio-fft-to-retrieve-specific-frequency-magnitude-using-audiorecord
+			*/
+			int newBufferSize = 1;
+			while(newBufferSize < bufferSize)
+				newBufferSize *= 2;
+			double[] micBufferData = new double[newBufferSize];
+		    final int bytesPerSample = 2; // As it is 16bit PCM
+		    final double amplification = 100.0; // choose a number as you like
+		    for (int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
+		        double sample = 0;
+		        for (int b = 0; b < bytesPerSample; b++) {
+		            int v = audioBuffer[index + b];
+		            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
+		                v &= 0xFF;
+		            }
+		            sample += v << (b * 8);
+		        }
+		        double sample32 = amplification * (sample / 32768.0);
+		        micBufferData[floatIndex] = sample32;
+		    }
+		    Complex[] fftTempArray = new Complex[newBufferSize];
+		    for (int i=0; i<newBufferSize; i++)
+		    {
+		        fftTempArray[i] = new Complex(micBufferData[i], 0);
+		    }
+		    Complex[] fftArray = FFT.fft(fftTempArray);
+		    
 			shortSequence = "Sequence:";
 			for(short s : audioBuffer)
 			{
 				shortSequence += " " + s;
 			}
+			String doubleSequence = "";
+			for(double d : micBufferData)
+			{
+				doubleSequence += " " + d;
+			}
+			String complexSequence = "";
+			for(Complex c : fftArray)
+			{
+				complexSequence += " " + c;
+			}
+			Log.i("AFTER CONVERSION", doubleSequence);
+			Log.i("AFTER FFT", complexSequence);
 		}
     }
     
