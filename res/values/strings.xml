@@ -7,4 +7,5 @@
     <string name="title_activity_alert">Alert</string>
 
     <string name="button_send">Send</string>
+    <string name="stop_button">Okay Stop</string>
 </resources>

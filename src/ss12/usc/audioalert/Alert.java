@@ -2,12 +2,16 @@ package ss12.usc.audioalert;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
+import android.view.View;
 
 
 public class Alert extends Activity {
+	
+	Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +23,6 @@ public class Alert extends Activity {
         //startActivity();
 		
 		String i =	getIntent().getExtras().getSerializable("alert-id").toString();
-		
-		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
 
 		long[] _pattern = new long[]{0,100,50,100,50,100};
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
@@ -35,6 +36,10 @@ public class Alert extends Activity {
 			v.vibrate(_pattern2, -1);	
 		}
 	}
+    
+    public void okayStop(View view) {
+    	v.cancel();
+    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
