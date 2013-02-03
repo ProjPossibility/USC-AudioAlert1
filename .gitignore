@@ -28,6 +28,7 @@ Thumbs.db
 bin/
 gen/
 gen/*
+R.java
 
 
 # Local configuration file (sdk path, etc)
