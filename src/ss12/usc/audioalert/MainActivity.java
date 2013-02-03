@@ -61,30 +61,12 @@ public class MainActivity extends Activity {
 			TextView tv_status = (TextView)findViewById(R.id.textView_status);
 			tv_status.setText("LISTENING HAS STARTED\n");
 			
-			//AudioRecordTest art = new AudioRecordTest();
-			//art.record(true);
 			recorder.startRecording();
 			Log.i("MainActivity", "Started recording!");
 			recorder.read(audioBuffer, 0, bufferSize);
 			recorder.stop();
-			//art.record(false);
 			tv_status.setText("" + tv_status.getText() + "LISTENING HAS STOPPED");
-			//art.play(true);
-			long time = System.currentTimeMillis();
-			//art.play(false);
-			// this doesn't work :(
-			/*
-			AudioTrack playback =
-					new AudioTrack(AudioManager.STREAM_ALARM, sampleSize, channel_config, format, bufferSize, AudioTrack.MODE_STATIC);
-			playback.write(audioBuffer, 0, bufferSize);
-			playback.play();
-			*/
 			
-			/*
-			 * FFT analysis here - Source:
-			 *	http://stackoverflow.com/questions/5774104/
-			 *	android-audio-fft-to-retrieve-specific-frequency-magnitude-using-audiorecord
-			*/
 			int newBufferSize = 1;
 			while(newBufferSize < bufferSize)
 				newBufferSize *= 2;
@@ -166,18 +148,12 @@ public class MainActivity extends Activity {
 				shortSequence += " " + s;
 			}
 			String doubleSequence = "";
-			/*
-			String complexSequence = "";
-			for(Complex c : fftArray)
-				complexSequence += " " + c;
-			*/
 			Log.i("AFTER CONVERSION", doubleSequence);
 		}
     }
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
