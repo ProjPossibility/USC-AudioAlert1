@@ -14,10 +14,26 @@ public class Alert extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert);
 		
+		//Intent i=new Intent(getApplicationContext(), sample.class);
+        //i.putExtra("id", id);
+        //startActivity();
+		
+		String i =	getIntent().getExtras().getSerializable("alert-id").toString();
+		
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+
 		long[] _pattern = new long[]{0,100,50,100,50,100};
-		v.vibrate(_pattern, -1);		
+		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
+		
+		if(i == "1"){
+			// 3 x long
+			v.vibrate(_pattern, -1);
+		}		
+		else if(i == "2"){
+			// 6 x short
+			v.vibrate(_pattern2, -1);	
+		}
 	}
 
 	@Override
