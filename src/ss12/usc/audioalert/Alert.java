@@ -42,7 +42,7 @@ public class Alert extends Activity {
 		else if(alertType == 2){
 			// 6 x short
 			tv.setText("Tornado Warning");
-			v.vibrate(_pattern1, 2);	
+			v.vibrate(_pattern, 2);	
 		}
 	}
     
