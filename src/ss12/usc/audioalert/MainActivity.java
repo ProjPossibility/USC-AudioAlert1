@@ -131,18 +131,25 @@ public class MainActivity extends Activity {
 		}
     }
     
-    public void sendMessage(View view) {
-	    Intent intent = new Intent(this, Alert.class);
-	    intent.putExtra("alert-id", 2);
-	    Log.i("MainActivity", "Printing " + shortSequence);
-	    intent.putExtra("seq", shortSequence);
-	    startActivity(intent);
-    }
-    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+    
+    public void sendMessage(View view) {
+    	finish();
+    }
+    
+    @Override
+    public void onDestroy() {
+        super.onDestroy();  // Always call the superclass
+
+	    Intent intent = new Intent(this, Alert.class);
+	    intent.putExtra("alert-id", 2);
+	    Log.i("MainActivity", "Printing " + shortSequence);
+	    intent.putExtra("seq", shortSequence);
+	    startActivity(intent);
     }
 }
