@@ -68,8 +68,7 @@ public class MainActivity extends Activity {
     
     public void sendMessage(View view) {
 	    Intent intent = new Intent(this, Alert.class);
-	    //String message = "This is my string, hear me roar.";
-	    intent.putExtra(EXTRA_MESSAGE, shortSequence);
+	    intent.putExtra("alert-id", "2");
 	    startActivity(intent);
     }
     
