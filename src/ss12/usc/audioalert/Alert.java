@@ -28,11 +28,11 @@ public class Alert extends Activity {
 		
 		if(i == "1"){
 			// 3 x long
-			v.vibrate(_pattern, -1);
+			v.vibrate(_pattern, 2);
 		}		
 		else if(i == "2"){
 			// 6 x short
-			v.vibrate(_pattern2, -1);	
+			v.vibrate(_pattern2, 2);	
 		}
 	}
     
