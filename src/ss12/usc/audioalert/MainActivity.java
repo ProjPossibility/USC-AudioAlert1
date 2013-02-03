@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
 		audioInput.read(audioBuffer, 0, bufferSize); */
     }
     
-    public void sendMessage(View view) {
+    public void sendMessage() {
 	    Intent intent = new Intent(this, Alert.class);
 	    //String message = "This is my string, hear me roar.";
 	    //intent.putExtra(EXTRA_MESSAGE, message);
