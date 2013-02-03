@@ -16,26 +16,10 @@ public class Alert extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert);
 		
-<<<<<<< HEAD
-		Intent intent = getIntent();
-		String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
-=======
-		//Intent intent = getIntent();
-		//String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
->>>>>>> a3e643a246c62c5a6c772d7de41c5d1f5abebf39
-		
 		Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		long[] _pattern = new long[]{0,300,0,300,0,300};
 		v.vibrate(_pattern, -1);		
-		
-	    // Create the text view
-	    TextView textView = new TextView(this);
-	    textView.setTextSize(40);
-	    textView.setText(message);
-
-	    // Set the text view as the activity layout
-	    setContentView(textView);
 	}
 
 	@Override
