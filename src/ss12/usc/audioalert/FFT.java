@@ -108,7 +108,6 @@ public class FFT {
         return ifft(c);
     }
 
-
     // compute the linear convolution of x and y
     public static Complex[] convolve(Complex[] x, Complex[] y) {
         Complex ZERO = new Complex(0, 0);

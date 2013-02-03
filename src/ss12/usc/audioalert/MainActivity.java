@@ -3,12 +3,15 @@ package ss12.usc.audioalert;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioFormat;
+import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 // code for checking for finding a valid AudioRecord comes from this source:
 // http://stackoverflow.com/questions/4843739/audiorecord-object-not-initializing
@@ -54,9 +57,22 @@ public class MainActivity extends Activity {
 			int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
 			
 			byte[] audioBuffer = new byte[bufferSize];
+			
+			TextView tv_status = (TextView)findViewById(R.id.textView_status);
+			tv_status.setText("LISTENING HAS STARTED\n");
+			
 			recorder.startRecording();
 			recorder.read(audioBuffer, 0, bufferSize);
 			recorder.stop();
+			tv_status.setText("" + tv_status.getText() + "LISTENING HAS STOPPED");
+			
+			// this doesn't work :(
+			/*
+			AudioTrack playback =
+					new AudioTrack(AudioManager.STREAM_ALARM, sampleSize, channel_config, format, bufferSize, AudioTrack.MODE_STATIC);
+			playback.write(audioBuffer, 0, bufferSize);
+			playback.play();
+			*/
 			
 			/*
 			 * FFT analysis here
@@ -88,6 +104,12 @@ public class MainActivity extends Activity {
 		        fftTempArray[i] = new Complex(micBufferData[i], 0);
 		    }
 		    Complex[] fftArray = FFT.fft(fftTempArray);
+		    double[] magnitudes = new double[fftArray.length];
+		    for(int i = 0; i < magnitudes.length; i++)
+		    {
+		    	Complex what = fftArray[i];
+		    	magnitudes[i] = Math.sqrt(what.re()*what.re() + what.im()*what.im());
+		    }
 		    
 			shortSequence = "Sequence:";
 			for(short s : audioBuffer)
@@ -124,4 +146,3 @@ public class MainActivity extends Activity {
         return true;
     }
 }
-

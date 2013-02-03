@@ -26,7 +26,7 @@ public class Alert extends Activity {
 				
 		int alertType = getIntent().getExtras().getInt("alert-id");
 		String soundSequence = getIntent().getExtras().getString("seq");
-		Log.i("Alert", "Printing " + soundSequence);
+		// Log.i("Alert", "Printing " + soundSequence);
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
