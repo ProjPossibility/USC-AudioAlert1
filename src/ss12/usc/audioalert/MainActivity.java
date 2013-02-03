@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 
 // code for checking for finding a valid AudioRecord comes from this source:
 // http://stackoverflow.com/questions/4843739/audiorecord-object-not-initializing
@@ -22,7 +21,6 @@ public class MainActivity extends Activity {
     public final static int NUM_TOP_MAGNITUDES = 10;
 	int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
     String shortSequence;
-    int alerttype;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,7 +149,7 @@ public class MainActivity extends Activity {
 			    		BCount++;
 			    	debug_largestMags += largestMags[a].toString() + "\n";
 			    }
-			    Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
+			    // Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
 			    
 			    if(ACount >= threshold)
 			    	sendMessage(1);
@@ -162,8 +160,9 @@ public class MainActivity extends Activity {
     }
     
     public void sendMessage(int alertType) {
+    	Log.i("sendMessage", "SENDING ALERT TYPE " + alertType);
 	    Intent intent = new Intent(this, Alert.class);
-	    intent.putExtra("alert-id", alerttype);
+	    intent.putExtra("alert-id", alertType);
 	    startActivity(intent);
     }
     
