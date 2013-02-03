@@ -8,6 +8,7 @@ import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 
 // code for checking for finding a valid AudioRecord comes from this source:
 // http://stackoverflow.com/questions/4843739/audiorecord-object-not-initializing
@@ -58,7 +59,7 @@ public class MainActivity extends Activity {
 		}
     }
     
-    public void sendMessage() {
+    public void sendMessage(View view) {
 	    Intent intent = new Intent(this, Alert.class);
 	    //String message = "This is my string, hear me roar.";
 	    //intent.putExtra(EXTRA_MESSAGE, message);
