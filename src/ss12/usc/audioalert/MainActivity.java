@@ -57,18 +57,26 @@ public class MainActivity extends Activity {
 			short[] audioBuffer = new short[bufferSize];
 			audioInput.startRecording();
 			audioInput.read(audioBuffer, 0, bufferSize);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			audioInput.stop();
 			
-			shortSequence = "";
+			shortSequence = "Sequence: ";
 			for(short s : audioBuffer)
 			{
-				shortSequence += "" + s;
+				shortSequence += " " + s;
 			}
 		}
     }
     
     public void sendMessage(View view) {
 	    Intent intent = new Intent(this, Alert.class);
-	    intent.putExtra("alert-id", "2");
+	    intent.putExtra("alert-id", 2);
+	    intent.putExtra("seq", shortSequence);
 	    startActivity(intent);
     }
     
