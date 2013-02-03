@@ -2,6 +2,7 @@ package ss12.usc.audioalert;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
@@ -45,6 +46,9 @@ public class Alert extends Activity {
     
     public void okayStop(View view) {
     	v.cancel();
+    	
+	    Intent intent = new Intent(this, MainActivity.class);
+	    startActivity(intent);
     }
 
 	@Override
