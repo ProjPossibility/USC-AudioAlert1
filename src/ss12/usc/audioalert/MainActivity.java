@@ -1,11 +1,11 @@
 package ss12.usc.audioalert;
 
+import java.util.Arrays;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.media.AudioFormat;
-import android.media.AudioManager;
 import android.media.AudioRecord;
-import android.media.AudioTrack;
 import android.media.MediaRecorder.AudioSource;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +19,8 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 	
     public final static String EXTRA_MESSAGE = "ss12.usc.audioalert.MESSAGE";
+    public final static int NUM_TOP_MAGNITUDES = 10;
+	int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
     String shortSequence;
     
     @Override    
@@ -26,9 +28,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-		int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
-		AudioRecord recorder = null;
-		
+		AudioRecord recorder = null;	
 		for (int rate : mSampleRates) {
 	        for (short audioFormat : new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT }) {
 	            for (short channelConfig : new short[] { AudioFormat.CHANNEL_IN_MONO, AudioFormat.CHANNEL_IN_STEREO }) {
@@ -61,11 +61,17 @@ public class MainActivity extends Activity {
 			TextView tv_status = (TextView)findViewById(R.id.textView_status);
 			tv_status.setText("LISTENING HAS STARTED\n");
 			
+			//AudioRecordTest art = new AudioRecordTest();
+			//art.record(true);
 			recorder.startRecording();
+			Log.i("MainActivity", "Started recording!");
 			recorder.read(audioBuffer, 0, bufferSize);
 			recorder.stop();
+			//art.record(false);
 			tv_status.setText("" + tv_status.getText() + "LISTENING HAS STOPPED");
-			
+			//art.play(true);
+			long time = System.currentTimeMillis();
+			//art.play(false);
 			// this doesn't work :(
 			/*
 			AudioTrack playback =
@@ -75,8 +81,7 @@ public class MainActivity extends Activity {
 			*/
 			
 			/*
-			 * FFT analysis here
-			 * Source:
+			 * FFT analysis here - Source:
 			 *	http://stackoverflow.com/questions/5774104/
 			 *	android-audio-fft-to-retrieve-specific-frequency-magnitude-using-audiorecord
 			*/
@@ -104,12 +109,56 @@ public class MainActivity extends Activity {
 		        fftTempArray[i] = new Complex(micBufferData[i], 0);
 		    }
 		    Complex[] fftArray = FFT.fft(fftTempArray);
-		    double[] magnitudes = new double[fftArray.length];
-		    for(int i = 0; i < magnitudes.length; i++)
+		    FreqMag[] fm_array = new FreqMag[fftArray.length];
+		    for(int i = 0; i < fm_array.length; i++)
 		    {
 		    	Complex what = fftArray[i];
-		    	magnitudes[i] = Math.sqrt(what.re()*what.re() + what.im()*what.im());
+		    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
 		    }
+		    
+		    /*
+		    FreqMag[] max = new FreqMag[NUM_TOP_MAGNITUDES];
+		    double smallestMax = Double.MAX_VALUE;
+		    int indSM = -1;
+		    for(int i = 0; i < fm_array.length; i++)
+		    {
+		    	double theMag = fm_array[i].mag;
+		    	if(i < NUM_TOP_MAGNITUDES)
+		    	{
+		    		max[i] = fm_array[i];
+		    		if(smallestMax > theMag)
+		    		{
+		    			smallestMax = theMag;
+		    			indSM = i;
+		    		}
+		    	}
+		    	else
+	    		{
+		    		if(smallestMax < theMag)
+		    		{
+		    			max[indSM] = new FreqMag(getFreq(i, sampleSize, fftArray.length), theMag);
+		    			smallestMax = Double.MAX_VALUE;
+		    			for(int j = 0; j < max.length; j++)
+		    			{
+	    		    		if(smallestMax > max[j].mag)
+	    		    		{
+	    		    			smallestMax = max[j].mag;
+	    		    			indSM = j;
+	    		    		}
+		    			}
+		    		}
+	    		}
+		    }
+		    */
+		    
+		    FreqMag[] debug_mags = new FreqMag[fm_array.length];
+		    for(int a = 0; a < debug_mags.length; a++)
+		    	debug_mags[a] = fm_array[a];
+		    Arrays.sort(debug_mags);
+		    String debug_largestMags = " ";
+		    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
+		    	debug_largestMags += debug_mags[a].toString() + "\n";
+		    Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
 		    
 			shortSequence = "Sequence:";
 			for(short s : audioBuffer)
@@ -117,17 +166,12 @@ public class MainActivity extends Activity {
 				shortSequence += " " + s;
 			}
 			String doubleSequence = "";
-			for(double d : micBufferData)
-			{
-				doubleSequence += " " + d;
-			}
+			/*
 			String complexSequence = "";
 			for(Complex c : fftArray)
-			{
 				complexSequence += " " + c;
-			}
+			*/
 			Log.i("AFTER CONVERSION", doubleSequence);
-			Log.i("AFTER FFT", complexSequence);
 		}
     }
     
@@ -142,6 +186,11 @@ public class MainActivity extends Activity {
     	finish();
     }
     
+    public double getFreq(int index, int fs, int N)
+    {
+    	return index * fs / (N * 1.0);
+    }
+    
     @Override
     public void onDestroy() {
         super.onDestroy();  // Always call the superclass
@@ -152,4 +201,23 @@ public class MainActivity extends Activity {
 	    intent.putExtra("seq", shortSequence);
 	    startActivity(intent);
     }
+}
+
+class FreqMag implements Comparable<FreqMag>
+{
+	public double freq;
+	public double mag;
+	public FreqMag(double one, double two)
+	{
+		freq = one;
+		mag = two;
+	}
+	public String toString()
+	{
+		return "" + freq + " " + mag;
+	}
+	public int compareTo(FreqMag other)
+	{
+		return (int)(Double.compare(other.mag, mag));
+	}
 }
