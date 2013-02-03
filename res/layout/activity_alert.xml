@@ -4,5 +4,4 @@
     android:layout_height="match_parent"
     android:background="@layout/activity_main"
     tools:context=".Alert" >
-
 </RelativeLayout>

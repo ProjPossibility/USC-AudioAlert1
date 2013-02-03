@@ -13,6 +13,7 @@ public class Alert extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert);
 		
+		@SuppressWarnings("unused")
 		Intent intent = getIntent();
 		//String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
 		
