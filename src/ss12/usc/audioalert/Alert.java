@@ -37,12 +37,12 @@ public class Alert extends Activity {
 		if(alertType == 1){
 			// 3 x long
 			tv.setText("Police Siren");
-			v.vibrate(_pattern, 2);
+			v.vibrate(_pattern2, 2);
 		}		
 		else if(alertType == 2){
 			// 6 x short
 			tv.setText("Tornado Warning");
-			v.vibrate(_pattern2, 2);	
+			v.vibrate(_pattern1, 2);	
 		}
 	}
     
