@@ -51,7 +51,7 @@ public class Alert extends Activity {
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		long[] stopthis = new long[]{0,0};
 		v.vibrate(stopthis,0);
-    	
+    	v.cancel();
 		finish();
     }
     
