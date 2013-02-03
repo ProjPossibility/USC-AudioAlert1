@@ -16,6 +16,7 @@ import android.view.View;
 public class MainActivity extends Activity {
 	
     public final static String EXTRA_MESSAGE = "ss12.usc.audioalert.MESSAGE";
+    String shortSequence;
     
     @Override    
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class MainActivity extends Activity {
         
 		int channel_config = AudioFormat.CHANNEL_CONFIGURATION_MONO;
 		int format = AudioFormat.ENCODING_PCM_16BIT;
-		int[] mSampleRates = new int[]{8000, 11025, 22050, 44100};
+		int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
 		AudioRecord recorder = null;
 		
 		for (int rate : mSampleRates) {
@@ -37,7 +38,7 @@ public class MainActivity extends Activity {
 	                    if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
 	                        // check if we can instantiate and have a success
 	                        recorder = new AudioRecord(AudioSource.DEFAULT, rate, channelConfig, audioFormat, bufferSize);
-	                        if (recorder.getState() != AudioRecord.STATE_INITIALIZED)
+	                        if (recorder.getState() == AudioRecord.STATE_INITIALIZED)
 	                            recorder = null;
 	                    }
 	                } catch (Exception e) {
@@ -48,6 +49,7 @@ public class MainActivity extends Activity {
 	    }
 		if(recorder != null)
 		{
+			Log.d("MainActivity", "LOLOLOL IT WORKS :D");
 			int sampleSize = recorder.getSampleRate();
 			int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
 			AudioRecord audioInput = new AudioRecord(AudioSource.MIC, sampleSize, channel_config, format, bufferSize);
@@ -55,14 +57,19 @@ public class MainActivity extends Activity {
 			short[] audioBuffer = new short[bufferSize];
 			audioInput.startRecording();
 			audioInput.read(audioBuffer, 0, bufferSize);
-			Log.d("MainActivity", "LOLOLOL IT WORKS :D");
+			
+			shortSequence = "";
+			for(short s : audioBuffer)
+			{
+				shortSequence += "" + s;
+			}
 		}
     }
     
     public void sendMessage(View view) {
 	    Intent intent = new Intent(this, Alert.class);
 	    //String message = "This is my string, hear me roar.";
-	    //intent.putExtra(EXTRA_MESSAGE, message);
+	    intent.putExtra(EXTRA_MESSAGE, shortSequence);
 	    startActivity(intent);
     }
     
