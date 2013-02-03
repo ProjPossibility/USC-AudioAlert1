@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
-
+	
     public final static String EXTRA_MESSAGE = "ss12.usc.audioalert.MESSAGE";
     
     @Override    
