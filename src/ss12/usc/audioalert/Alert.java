@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class Alert extends Activity {
@@ -28,18 +29,19 @@ public class Alert extends Activity {
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
-		//TextView tv = (TextView)findViewById(R.id.textView1);
-		//tv.setText(soundSequence);
+		TextView tv = (TextView)findViewById(R.id.textView1);
 		
 		long[] _pattern = new long[]{0,100,50,100,50,100};
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
 		
 		if(alertType == 1){
 			// 3 x long
+			tv.setText("Police Siren");
 			v.vibrate(_pattern, 2);
 		}		
 		else if(alertType == 2){
 			// 6 x short
+			tv.setText("Tornado Warning");
 			v.vibrate(_pattern2, 2);	
 		}
 	}
