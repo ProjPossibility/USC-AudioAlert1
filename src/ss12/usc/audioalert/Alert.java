@@ -1,8 +1,14 @@
 package ss12.usc.audioalert;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
@@ -10,10 +16,14 @@ import android.view.View;
 import android.widget.TextView;
 
 
+@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+@SuppressLint("NewApi")
 public class Alert extends Activity {
 	
 	Vibrator v;
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,14 +48,62 @@ public class Alert extends Activity {
 			// 3 x long
 			tv.setText("Police Siren");
 			v.vibrate(_pattern2, 2);
+			NotificationManager notificationManager = (NotificationManager) 
+					  getSystemService(NOTIFICATION_SERVICE); 
+			Intent intent = new Intent(this, Alert.class);
+			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+			Notification noti = new Notification.Builder(this)
+				.setSmallIcon(android.R.drawable.stat_sys_warning)
+		        .setContentTitle("EMERGENCY ALERT DETECTED")
+		        .setContentText("Police Siren detected").build();
+			NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+			notificationManager.notify(0,noti);
 		}		
 		else if(alertType == 2){
 			// 6 x short
 			tv.setText("Tornado Warning");
 			v.vibrate(_pattern, 2);	
+			
+			NotificationManager notificationManager = (NotificationManager) 
+					  getSystemService(NOTIFICATION_SERVICE); 
+			Intent intent = new Intent(this, Alert.class);
+			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+			Notification noti = new Notification.Builder(this)
+			.setSmallIcon(android.R.drawable.stat_sys_warning)
+		        .setContentTitle("EMERGENCY ALERT DETECTED")
+		        .setContentText("Tornado warning detected").build();
+			NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+			notificationManager.notify(0,noti);
 		}
+		
+
+		/*start notification
+		
+		
+			NotificationManager notificationManager = (NotificationManager) 
+					  getSystemService(NOTIFICATION_SERVICE); 
+			
+			Intent intent = new Intent(this, Alert.class);
+			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+			Notification noti = new Notification.Builder(this)
+				.setSmallIcon(icon)
+		        .setContentTitle("EMERGENCY ALERT DETECTED")
+		        .setContentText(alert_name).build();
+			
+			NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			
+			noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+
+			notificationManager.notify(0,noti);
+			
+			end notification*/
+			
 	}
-    
+	
+
+	
     public void okayStop(View view) {
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
