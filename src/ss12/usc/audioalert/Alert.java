@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ public class Alert extends Activity {
 				
 		int alertType = getIntent().getExtras().getInt("alert-id");
 		String soundSequence = getIntent().getExtras().getString("seq");
+		Log.i("Alert", "Printing " + soundSequence);
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		

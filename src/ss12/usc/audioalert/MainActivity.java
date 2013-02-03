@@ -23,8 +23,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-		int channel_config = AudioFormat.CHANNEL_CONFIGURATION_MONO;
-		int format = AudioFormat.ENCODING_PCM_16BIT;
 		int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
 		AudioRecord recorder = null;
 		
@@ -38,7 +36,7 @@ public class MainActivity extends Activity {
 	                    if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
 	                        // check if we can instantiate and have a success
 	                        recorder = new AudioRecord(AudioSource.DEFAULT, rate, channelConfig, audioFormat, bufferSize);
-	                        if (recorder.getState() == AudioRecord.STATE_INITIALIZED)
+	                        if (recorder.getState() != AudioRecord.STATE_INITIALIZED)
 	                            recorder = null;
 	                    }
 	                } catch (Exception e) {
@@ -51,21 +49,16 @@ public class MainActivity extends Activity {
 		{
 			Log.d("MainActivity", "LOLOLOL IT WORKS :D");
 			int sampleSize = recorder.getSampleRate();
+			int channel_config = recorder.getChannelConfiguration();
+			int format = recorder.getAudioFormat();
 			int bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
-			AudioRecord audioInput = new AudioRecord(AudioSource.MIC, sampleSize, channel_config, format, bufferSize);
 			
 			short[] audioBuffer = new short[bufferSize];
-			audioInput.startRecording();
-			audioInput.read(audioBuffer, 0, bufferSize);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			audioInput.stop();
+			recorder.startRecording();
+			recorder.read(audioBuffer, 0, bufferSize);
+			recorder.stop();
 			
-			shortSequence = "Sequence: ";
+			shortSequence = "Sequence:";
 			for(short s : audioBuffer)
 			{
 				shortSequence += " " + s;
@@ -76,6 +69,7 @@ public class MainActivity extends Activity {
     public void sendMessage(View view) {
 	    Intent intent = new Intent(this, Alert.class);
 	    intent.putExtra("alert-id", 2);
+	    Log.i("MainActivity", "Printing " + shortSequence);
 	    intent.putExtra("seq", shortSequence);
 	    startActivity(intent);
     }
