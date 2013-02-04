@@ -176,10 +176,10 @@ public class MainActivity extends Activity {
 	    	largestMags[a] = fm_array[a];
 	    Arrays.sort(largestMags);
 
-	    double limLowerA = 1300, limUpperA = 1500, minAmpA = 5000;
+	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
 	    int ACount = 0; // alarm type: police siren
 	    
-	    double limLowerB = 1100, limUpperB = 1200, minAmpB = 5000;
+	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
 	    int BCount = 0;	// alarm type: tornado warning
 	    
 	    int threshold = 2;
