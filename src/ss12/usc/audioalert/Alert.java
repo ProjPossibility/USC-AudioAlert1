@@ -112,7 +112,7 @@ public class Alert extends Activity {
     	v.cancel();
 
 	    Intent intent = new Intent(this, MainActivity.class);
-	    intent.putExtra("redo", true);
+	    //intent.putExtra("redo", true);
 	    startActivity(intent);
     }
     

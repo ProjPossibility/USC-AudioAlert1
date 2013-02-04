@@ -89,6 +89,9 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        if(getIntent() != null)
+        	flag = true;
+        
 		recorder = null;	
 		for (int rate : mSampleRates) {
 	        for (short audioFormat : new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT }) {
