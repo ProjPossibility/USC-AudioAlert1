@@ -110,14 +110,15 @@ public class Alert extends Activity {
 		long[] stopthis = new long[]{0,0};
 		v.vibrate(stopthis,0);
     	v.cancel();
-		finish();
+
+	    Intent intent = new Intent(this, MainActivity.class);
+	    intent.putExtra("redo", true);
+	    startActivity(intent);
     }
     
     @Override
     public void onDestroy() {
         super.onDestroy();  // Always call the superclass
-	    Intent intent = new Intent(this, MainActivity.class);
-	    startActivity(intent);
     }
 
 	@Override
