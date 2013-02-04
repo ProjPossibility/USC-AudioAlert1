@@ -123,68 +123,6 @@ public class MainActivity extends Activity {
 			setTimerOn(bufferSize);
 			
 			// split
-			/*
-			int newBufferSize = 1;
-			while(newBufferSize < bufferSize)
-				newBufferSize *= 2;
-			double[] micBufferData = new double[newBufferSize];
-		    final int bytesPerSample = 2; // As it is 16bit PCM
-		    final double amplification = 100.0;
-		    for (int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
-		        double sample = 0;
-		        for (int b = 0; b < bytesPerSample; b++) {
-		            int v = audioBuffer[index + b];
-		            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
-		                v &= 0xFF;
-		            }
-		            sample += v << (b * 8);
-		        }
-		        double sample32 = amplification * (sample / 32768.0);
-		        micBufferData[floatIndex] = sample32;
-		    }
-		    
-		    Complex[] fftTempArray = new Complex[newBufferSize];
-		    for (int i=0; i<newBufferSize; i++)
-		        fftTempArray[i] = new Complex(micBufferData[i], 0);
-		    Complex[] fftArray = FFT.fft(fftTempArray);
-		    
-		    FreqMag[] fm_array = new FreqMag[fftArray.length];
-		    for(int i = 0; i < fm_array.length; i++)
-		    {
-		    	Complex what = fftArray[i];
-		    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
-		    }
-		    
-		    FreqMag[] largestMags = new FreqMag[fm_array.length];
-		    for(int a = 0; a < largestMags.length; a++)
-		    	largestMags[a] = fm_array[a];
-		    Arrays.sort(largestMags);
-
-		    double limLowerA = 1000, limUpperA = 1500;
-		    int ACount = 0; // alarm type: police siren
-		    
-		    double limLowerB = 600, limUpperB = 1200;
-		    int BCount = 0;	// alarm type: tornado warning
-		    
-		    int threshold = 2;
-		    // String debug_largestMags = " ";
-		    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
-		    {
-		    	double theMag = largestMags[a].mag;
-		    	if(theMag >= limLowerA && theMag <= limUpperA)
-		    		ACount++;
-		    	if(theMag >= limLowerB && theMag <= limUpperB)
-		    		BCount++;
-		    	// debug_largestMags += largestMags[a].toString() + "\n";
-		    }
-		    // Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
-		    
-		    if(ACount >= threshold)
-		    	sendMessage(1);
-		    else if(BCount >= threshold)
-		    	sendMessage(2);
-	    	*/
-		    // /split
 			
 		} else {
 			Log.e("MainActivity", "No supported audio format found");
