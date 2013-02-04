@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     AudioRecord recorder;
     byte[] audioBuffer;
     int bufferSize, sampleSize;
+    boolean flag = false;
     
     long starttime = 0;
 	Timer timer = new Timer();
@@ -112,6 +113,7 @@ public class MainActivity extends Activity {
 		{
 			Log.d("MainActivity", "LOLOLOL IT WORKS :D");
 			
+			flag = false;
 			sampleSize = recorder.getSampleRate();
 			int channel_config = recorder.getChannelConfiguration();
 			int format = recorder.getAudioFormat();
@@ -120,7 +122,7 @@ public class MainActivity extends Activity {
 			audioBuffer = new byte[bufferSize];
 			Log.i("MainActivity", "Started recording at time " + System.currentTimeMillis() + "!");
 			
-			setTimerOn(bufferSize);
+			setTimerOn();
 			
 			// split
 			
@@ -134,6 +136,7 @@ public class MainActivity extends Activity {
     	setTimerOff();
     	
     	// here goes nothing...
+    	Log.i("MainActivity", "Stopped recording at time " + System.currentTimeMillis() + "!");
     	int newBufferSize = 1;
 		while(newBufferSize < bufferSize)
 			newBufferSize *= 2;
@@ -189,10 +192,18 @@ public class MainActivity extends Activity {
 	    }
 	    // Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
 	    
-	    if(ACount >= threshold)
+	    if(ACount >= threshold && !flag)
+	    {
+	    	flag = true;
 	    	sendMessage(1);
-	    else if(BCount >= threshold)
+	    }
+	    else if(BCount >= threshold && !flag)
+	    {
+	    	flag = true;
 	    	sendMessage(2);
+	    }
+	    
+	    setTimerOn();
     }
     
     public void sendMessage(int alertType) {
@@ -202,7 +213,7 @@ public class MainActivity extends Activity {
 	    startActivity(intent);
     }
     
-    public void setTimerOn(int bufferSize) {
+    public void setTimerOn() {
     	recorder.startRecording();
 		recorder.read(audioBuffer, 0, bufferSize);
 		starttime = System.currentTimeMillis(); 
@@ -229,6 +240,18 @@ public class MainActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();  // Always call the superclass
     }
+    
+    /*
+    if(start == 1)
+    CODE
+    
+    start = 0
+    SEND MESSAGE
+    
+    ALERT:
+    	send back to main
+    	btw start = 1
+    	*/
     
     public double getFreq(int index, int fs, int N)
     {
