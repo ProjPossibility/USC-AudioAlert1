@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 	class FirstTask extends TimerTask { 
 		 
         @Override 
-        public void run() { 
+        public void run() {
             h.sendEmptyMessage(0); 
         }
 	};
@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
         super.onResume();
 
         if(getIntent() != null)
-        	flag = true;
+        	flag = false;
         
 		recorder = null;	
 		for (int rate : mSampleRates) {
@@ -176,17 +176,17 @@ public class MainActivity extends Activity {
 	    	largestMags[a] = fm_array[a];
 	    Arrays.sort(largestMags);
 
-	    double limLowerA = 1000, limUpperA = 1500;
+	    double limLowerA = 1300, limUpperA = 1500, minAmpA = 5000;
 	    int ACount = 0; // alarm type: police siren
 	    
-	    double limLowerB = 600, limUpperB = 1200;
+	    double limLowerB = 1100, limUpperB = 1200, minAmpB = 5000;
 	    int BCount = 0;	// alarm type: tornado warning
 	    
 	    int threshold = 2;
 	    // String debug_largestMags = " ";
 	    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
 	    {
-	    	double theMag = largestMags[a].mag;
+	    	double theMag = largestMags[a].freq;
 	    	if(theMag >= limLowerA && theMag <= limUpperA)
 	    		ACount++;
 	    	if(theMag >= limLowerB && theMag <= limUpperB)
