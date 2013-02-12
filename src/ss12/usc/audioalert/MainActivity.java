@@ -190,7 +190,7 @@ public class MainActivity extends Activity {
 	     * int numRanges = Integer.parseInt(br.readLine());
 	     * int[] lowerFreqs = new int[numRanges];
 	     * int[] upperFreqs = new int[numRanges];
-	     * int[] lowerAmps = new int[numRanges];
+	     * int[] lowerMags = new int[numRanges];
 	     * int[] alertTypes = new int[numRanges];
 	     * StringTokenizer st;
 	     * for(int i = 0; i < numRanges; i++)
@@ -198,19 +198,29 @@ public class MainActivity extends Activity {
 	     * 	st = new StringTokenizer(br.readLine());
 	     * 	lowerFreqs[i] = Integer.parseInt(st.nextToken());
 	     * upperFreqs[i] = Integer.parseInt(st.nextToken());
-	     * lowerAmps[i] = Integer.parseInt(st.nextToken());
+	     * lowerMags[i] = Integer.parseInt(st.nextToken());
 	     * alertTypes[i] = Integer.parseInt(st.nextToken());
 	     * }
 	     * for(int a = 0; a < numRanges.length; a++)
 	     * {
+	     * 		boolean sendAlert = false;
 	     * 		for(int fmInd = 0; fmInd < fm_array_sorted.length; fmInd++)
 	     * 		{
 	     *			FreqMag fm = fm_array_sorted[fmInd];
-	     *			if(fm.freq > upperFreqs[i])
+	     *			if(fm.freq > upperFreqs[a])
 	     *				break;
-	     *			if(fm.freq < lowerFreqs[i])
+	     *			if(fm.mag[fmInd] > lowerMags[a])
+	     *			{
+	     *				sendAlert = true;
+	     *				break;
+	     *			}
+	     *			if(fm.freq < lowerFreqs[a])
 	     *				continue;
-	     *			
+	     * 		}
+	     * 		if(sendAlert)
+	     * 		{
+	     * 			flag = true;
+	     * 			sendMessage(alertTypes[a]);
 	     * 		}
 	     * }
 	     * 
