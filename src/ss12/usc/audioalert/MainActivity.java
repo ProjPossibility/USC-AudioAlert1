@@ -147,9 +147,9 @@ public class MainActivity extends Activity {
 		double[] micBufferData = new double[newBufferSize];
 	    final int bytesPerSample = 2; // As it is 16bit PCM
 	    final double amplification = 100.0;
-	    for (int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
+	    for(int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
 	        double sample = 0;
-	        for (int b = 0; b < bytesPerSample; b++) {
+	        for(int b = 0; b < bytesPerSample; b++) {
 	            int v = audioBuffer[index + b];
 	            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
 	                v &= 0xFF;
@@ -160,6 +160,7 @@ public class MainActivity extends Activity {
 	        micBufferData[floatIndex] = sample32;
 	    }
 	    
+	    // padding FFT array to make its size 2^n
 	    Complex[] fftTempArray = new Complex[newBufferSize];
 	    for (int i=0; i<newBufferSize; i++)
 	        fftTempArray[i] = new Complex(micBufferData[i], 0);
@@ -172,14 +173,13 @@ public class MainActivity extends Activity {
 	    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
 	    }
 	    
-	    FreqMag[] largestMags = new FreqMag[fm_array.length];
-	    for(int a = 0; a < largestMags.length; a++)
-	    	largestMags[a] = fm_array[a];
-	    Arrays.sort(largestMags);
+	    FreqMag[] fm_array_sorted = new FreqMag[fm_array.length];
+	    for(int a = 0; a < fm_array_sorted.length; a++)
+	    	fm_array_sorted[a] = fm_array[a];
+	    Arrays.sort(fm_array_sorted); // sorted by frequencies, increasing order
 
 	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
 	    int ACount = 0; // alarm type: police siren
-	    
 	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
 	    int BCount = 0;	// alarm type: tornado warning
 	    
@@ -189,17 +189,41 @@ public class MainActivity extends Activity {
 	     * Look at target range of frequencies (e.g. for police siren, 1200 to 1500)
 	     * If any freq's amplitude (or the average of all these amplitudes) are above a certain value, ALERT
 	     * otherwise keep going
-	     * 
 	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
+	     *
+	     * BufferedReader br = new BufferedReader(new FileReader(SOUND_LIMITS_FILE_NAME));
+	     * int numRanges = Integer.parseInt(br.readLine());
+	     * int[] lowerFreqs = new int[numRanges];
+	     * int[] upperFreqs = new int[numRanges];
+	     * int[] lowerAmps = new int[numRanges];
+	     * String[] alertTypes = new String[numRanges];
+	     * StringTokenizer st;
+	     * for(int i = 0; i < numRanges; i++)
+	     * {
+	     * 	st = new StringTokenizer(br.readLine());
+	     * 	lowerFreqs[i] = Integer.parseInt(st.nextToken());
+	     * upperFreqs[i] = Integer.parseInt(st.nextToken());
+	     * lowerAmps[i] = Integer.parseInt(st.nextToken());
+	     * alertTypes[i] = st.nextToken();
+	     * }
+	     * for(int a = 0; a < numRanges.length; a++)
+	     * {
+	     * 		for(int fmInd = 0; fmInd < fm_array_sorted.length; fmInd++)
+	     * 		{
+	     *			FreqMag fm = fm_array_sorted[fmInd];
+	     *			if(fm.freq > upperFreqs[i])
+	     *				break;
+	     *			if(fm.freq < lowerFreqs[i])
+	     *				continue;
+	     * 		}
+	     * }
 	     */
-	    
-	    //double lowerLimits = 
 	    
 	    int threshold = 2;
 	    // String debug_largestMags = " ";
 	    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
 	    {
-	    	double theFreq = largestMags[a].freq;
+	    	double theFreq = fm_array_sorted[a].freq;
 	    	if(theFreq >= limLowerA && theFreq <= limUpperA)
 	    		ACount++;
 	    	if(theFreq >= limLowerB && theFreq <= limUpperB)
@@ -266,7 +290,7 @@ public class MainActivity extends Activity {
     
     ALERT:
     	send back to main
-    	btw start = 1
+    	start = 1
     	*/
     
     public double getFreq(int index, int fs, int N)
@@ -290,6 +314,7 @@ class FreqMag implements Comparable<FreqMag>
 	}
 	public int compareTo(FreqMag other)
 	{
-		return (int)(Double.compare(other.mag, mag));
+		return (int)(Double.compare(freq, other.freq));
+		// return (int)(Double.compare(other.mag, mag));
 	}
 }
