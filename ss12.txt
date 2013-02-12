@@ -1,3 +1,37 @@
+battery drain: is the app/phone always gonna be on?
+
+1) get user input
+2) get sound recording
+
+UI
+
+recording sound
+analyzing sound
+	-volume (MeidaRecorder getMaxAmplitude())
+displaying alerts
+
+
+
+We just don't know if the data reflects the actual sound
+	I could try to do that but playback is not working
+
+Tasks:
+	return top 3 frequencies
+	take a sample every second (continuous read-in)
+
+
+Handler recordTimer = new Handler();
+Runnable r = new Runnable() 
+{
+	public void run() 
+	{
+		recorder.stop();
+		recorder.release(); 
+	}
+};
+handler.postDelayed(r, 500);
+
+
 package ss12.usc.audioalert;
 
 import java.util.Arrays;
@@ -22,7 +56,6 @@ import android.view.Menu;
 public class MainActivity extends Activity {
 	
     public final static String EXTRA_MESSAGE = "ss12.usc.audioalert.MESSAGE";
-    final static String SOUND_LIMITS_FILE_NAME = "sound_limits_data.txt";
     public final static int NUM_TOP_MAGNITUDES = 10;
     public final static long RECORD_TIME = 500;
 	int[] mSampleRates = new int[]{44100, 22050, 11025, 8000};
@@ -30,14 +63,13 @@ public class MainActivity extends Activity {
     AudioRecord recorder;
     byte[] audioBuffer;
     int bufferSize, sampleSize;
-    boolean flag = false;
     
     long starttime = 0;
 	Timer timer = new Timer();
 	class FirstTask extends TimerTask { 
 		 
         @Override 
-        public void run() {
+        public void run() { 
             h.sendEmptyMessage(0); 
         }
 	};
@@ -90,9 +122,6 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        if(getIntent() != null)
-        	flag = false;
-        
 		recorder = null;	
 		for (int rate : mSampleRates) {
 	        for (short audioFormat : new short[] { AudioFormat.ENCODING_PCM_8BIT, AudioFormat.ENCODING_PCM_16BIT }) {
@@ -117,7 +146,6 @@ public class MainActivity extends Activity {
 		{
 			Log.d("MainActivity", "LOLOLOL IT WORKS :D");
 			
-			flag = false;
 			sampleSize = recorder.getSampleRate();
 			int channel_config = recorder.getChannelConfiguration();
 			int format = recorder.getAudioFormat();
@@ -126,9 +154,71 @@ public class MainActivity extends Activity {
 			audioBuffer = new byte[bufferSize];
 			Log.i("MainActivity", "Started recording at time " + System.currentTimeMillis() + "!");
 			
-			setTimerOn();
+			setTimerOn(bufferSize);
 			
 			// split
+			/*
+			int newBufferSize = 1;
+			while(newBufferSize < bufferSize)
+				newBufferSize *= 2;
+			double[] micBufferData = new double[newBufferSize];
+		    final int bytesPerSample = 2; // As it is 16bit PCM
+		    final double amplification = 100.0;
+		    for (int index = 0, floatIndex = 0; index < bufferSize - bytesPerSample + 1; index += bytesPerSample, floatIndex++) {
+		        double sample = 0;
+		        for (int b = 0; b < bytesPerSample; b++) {
+		            int v = audioBuffer[index + b];
+		            if (b < bytesPerSample - 1 || bytesPerSample == 1) {
+		                v &= 0xFF;
+		            }
+		            sample += v << (b * 8);
+		        }
+		        double sample32 = amplification * (sample / 32768.0);
+		        micBufferData[floatIndex] = sample32;
+		    }
+		    
+		    Complex[] fftTempArray = new Complex[newBufferSize];
+		    for (int i=0; i<newBufferSize; i++)
+		        fftTempArray[i] = new Complex(micBufferData[i], 0);
+		    Complex[] fftArray = FFT.fft(fftTempArray);
+		    
+		    FreqMag[] fm_array = new FreqMag[fftArray.length];
+		    for(int i = 0; i < fm_array.length; i++)
+		    {
+		    	Complex what = fftArray[i];
+		    	fm_array[i] = new FreqMag(getFreq(i, sampleSize, fftArray.length), Math.sqrt(what.re()*what.re() + what.im()*what.im()));
+		    }
+		    
+		    FreqMag[] largestMags = new FreqMag[fm_array.length];
+		    for(int a = 0; a < largestMags.length; a++)
+		    	largestMags[a] = fm_array[a];
+		    Arrays.sort(largestMags);
+
+		    double limLowerA = 1000, limUpperA = 1500;
+		    int ACount = 0; // alarm type: police siren
+		    
+		    double limLowerB = 600, limUpperB = 1200;
+		    int BCount = 0;	// alarm type: tornado warning
+		    
+		    int threshold = 2;
+		    // String debug_largestMags = " ";
+		    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
+		    {
+		    	double theMag = largestMags[a].mag;
+		    	if(theMag >= limLowerA && theMag <= limUpperA)
+		    		ACount++;
+		    	if(theMag >= limLowerB && theMag <= limUpperB)
+		    		BCount++;
+		    	// debug_largestMags += largestMags[a].toString() + "\n";
+		    }
+		    // Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
+		    
+		    if(ACount >= threshold)
+		    	sendMessage(1);
+		    else if(BCount >= threshold)
+		    	sendMessage(2);
+	    	*/
+		    // /split
 			
 		} else {
 			Log.e("MainActivity", "No supported audio format found");
@@ -140,7 +230,6 @@ public class MainActivity extends Activity {
     	setTimerOff();
     	
     	// here goes nothing...
-    	Log.i("MainActivity", "Stopped recording at time " + System.currentTimeMillis() + "!");
     	int newBufferSize = 1;
 		while(newBufferSize < bufferSize)
 			newBufferSize *= 2;
@@ -177,49 +266,29 @@ public class MainActivity extends Activity {
 	    	largestMags[a] = fm_array[a];
 	    Arrays.sort(largestMags);
 
-	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
+	    double limLowerA = 1000, limUpperA = 1500;
 	    int ACount = 0; // alarm type: police siren
 	    
-	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
+	    double limLowerB = 600, limUpperB = 1200;
 	    int BCount = 0;	// alarm type: tornado warning
-	    
-	    /*
-	     * New algorithm: Read in from text file 
-	     * Look at frequencies only within certain range
-	     * Look at target range of frequencies (e.g. for police siren, 1200 to 1500)
-	     * If any freq's amplitude (or the average of all these amplitudes) are above a certain value, ALERT
-	     * otherwise keep going
-	     * 
-	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
-	     */
-	    
-	    //double lowerLimits = 
 	    
 	    int threshold = 2;
 	    // String debug_largestMags = " ";
 	    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
 	    {
-	    	double theFreq = largestMags[a].freq;
-	    	if(theFreq >= limLowerA && theFreq <= limUpperA)
+	    	double theMag = largestMags[a].mag;
+	    	if(theMag >= limLowerA && theMag <= limUpperA)
 	    		ACount++;
-	    	if(theFreq >= limLowerB && theFreq <= limUpperB)
+	    	if(theMag >= limLowerB && theMag <= limUpperB)
 	    		BCount++;
 	    	// debug_largestMags += largestMags[a].toString() + "\n";
 	    }
 	    // Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
 	    
-	    if(ACount >= threshold && !flag)
-	    {
-	    	flag = true;
+	    if(ACount >= threshold)
 	    	sendMessage(1);
-	    }
-	    else if(BCount >= threshold && !flag)
-	    {
-	    	flag = true;
+	    else if(BCount >= threshold)
 	    	sendMessage(2);
-	    }
-	    
-	    setTimerOn();
     }
     
     public void sendMessage(int alertType) {
@@ -229,7 +298,7 @@ public class MainActivity extends Activity {
 	    startActivity(intent);
     }
     
-    public void setTimerOn() {
+    public void setTimerOn(int bufferSize) {
     	recorder.startRecording();
 		recorder.read(audioBuffer, 0, bufferSize);
 		starttime = System.currentTimeMillis(); 
@@ -256,18 +325,6 @@ public class MainActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();  // Always call the superclass
     }
-    
-    /*
-    if(start == 1)
-    CODE
-    
-    start = 0
-    SEND MESSAGE
-    
-    ALERT:
-    	send back to main
-    	btw start = 1
-    	*/
     
     public double getFreq(int index, int fs, int N)
     {

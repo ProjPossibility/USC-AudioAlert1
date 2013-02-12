@@ -34,8 +34,6 @@ public class Alert extends Activity {
         //startActivity();
 				
 		int alertType = getIntent().getExtras().getInt("alert-id");
-		//String soundSequence = getIntent().getExtras().getString("seq");
-		// Log.i("Alert", "Printing " + soundSequence);
 
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
@@ -78,9 +76,7 @@ public class Alert extends Activity {
 			notificationManager.notify(0,noti);
 		}
 		
-
 		/*start notification
-		
 		
 			NotificationManager notificationManager = (NotificationManager) 
 					  getSystemService(NOTIFICATION_SERVICE); 
@@ -102,7 +98,6 @@ public class Alert extends Activity {
 			
 	}
 	
-
 	
     public void okayStop(View view) {
 
