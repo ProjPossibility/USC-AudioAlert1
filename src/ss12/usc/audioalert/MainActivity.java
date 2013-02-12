@@ -178,11 +178,6 @@ public class MainActivity extends Activity {
 	    	fm_array_sorted[a] = fm_array[a];
 	    Arrays.sort(fm_array_sorted); // sorted by frequencies, increasing order
 
-	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
-	    int ACount = 0; // alarm type: police siren
-	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
-	    int BCount = 0;	// alarm type: tornado warning
-	    
 	    /*
 	     * New algorithm: Read in from text file 
 	     * Look at frequencies only within certain range
@@ -196,7 +191,7 @@ public class MainActivity extends Activity {
 	     * int[] lowerFreqs = new int[numRanges];
 	     * int[] upperFreqs = new int[numRanges];
 	     * int[] lowerAmps = new int[numRanges];
-	     * String[] alertTypes = new String[numRanges];
+	     * int[] alertTypes = new int[numRanges];
 	     * StringTokenizer st;
 	     * for(int i = 0; i < numRanges; i++)
 	     * {
@@ -204,7 +199,7 @@ public class MainActivity extends Activity {
 	     * 	lowerFreqs[i] = Integer.parseInt(st.nextToken());
 	     * upperFreqs[i] = Integer.parseInt(st.nextToken());
 	     * lowerAmps[i] = Integer.parseInt(st.nextToken());
-	     * alertTypes[i] = st.nextToken();
+	     * alertTypes[i] = Integer.parseInt(st.nextToken());
 	     * }
 	     * for(int a = 0; a < numRanges.length; a++)
 	     * {
@@ -215,12 +210,18 @@ public class MainActivity extends Activity {
 	     *				break;
 	     *			if(fm.freq < lowerFreqs[i])
 	     *				continue;
+	     *			
 	     * 		}
 	     * }
+	     * 
 	     */
+
+	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
+	    int ACount = 0; // alarm type: police siren
+	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
+	    int BCount = 0;	// alarm type: tornado warning
 	    
 	    int threshold = 2;
-	    // String debug_largestMags = " ";
 	    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
 	    {
 	    	double theFreq = fm_array_sorted[a].freq;
@@ -228,9 +229,7 @@ public class MainActivity extends Activity {
 	    		ACount++;
 	    	if(theFreq >= limLowerB && theFreq <= limUpperB)
 	    		BCount++;
-	    	// debug_largestMags += largestMags[a].toString() + "\n";
 	    }
-	    // Log.i("EXPECTED GREATEST MAGNITUDES", debug_largestMags);
 	    
 	    if(ACount >= threshold && !flag)
 	    {
