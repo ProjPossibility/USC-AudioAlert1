@@ -127,7 +127,6 @@ public class MainActivity extends Activity {
 			Log.i("MainActivity", "Started recording at time " + System.currentTimeMillis() + "!");
 			
 			setTimerOn();
-			
 			// split
 			
 		} else {
@@ -217,7 +216,7 @@ public class MainActivity extends Activity {
 	     *			if(fm.freq < lowerFreqs[a])
 	     *				continue;
 	     * 		}
-	     * 		if(sendAlert)
+	     * 		if(sendAlert && !flag)
 	     * 		{
 	     * 			flag = true;
 	     * 			sendMessage(alertTypes[a]);
@@ -226,6 +225,7 @@ public class MainActivity extends Activity {
 	     * 
 	     */
 
+	    // start old algorithm
 	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
 	    int ACount = 0; // alarm type: police siren
 	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
@@ -251,7 +251,7 @@ public class MainActivity extends Activity {
 	    	flag = true;
 	    	sendMessage(2);
 	    }
-	    
+	    // end old algorithm
 	    setTimerOn();
     }
     
