@@ -42,59 +42,34 @@ public class Alert extends Activity {
 		long[] _pattern = new long[]{0,100,50,100,50,100};
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
 		
+		NotificationManager notificationManager = (NotificationManager) 
+				  getSystemService(NOTIFICATION_SERVICE); 		
+		Intent intent = new Intent(this, Alert.class);
+		
+		int icon = android.R.drawable.stat_sys_warning;
+		String alert_name = "";
+		
 		if(alertType == 1){
 			// 3 x long
 			tv.setText("Police Siren");
 			v.vibrate(_pattern2, 2);
-			NotificationManager notificationManager = (NotificationManager) 
-					  getSystemService(NOTIFICATION_SERVICE); 
-			Intent intent = new Intent(this, Alert.class);
-			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-			Notification noti = new Notification.Builder(this)
-				.setSmallIcon(android.R.drawable.stat_sys_warning)
-		        .setContentTitle("EMERGENCY ALERT DETECTED")
-		        .setContentText("Police Siren detected").build();
-			NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-			notificationManager.notify(0,noti);
+		    alert_name = "Police Siren detected";
 		}		
 		else if(alertType == 2){
 			// 6 x short
 			tv.setText("Tornado Warning");
 			v.vibrate(_pattern, 2);	
-			
-			NotificationManager notificationManager = (NotificationManager) 
-					  getSystemService(NOTIFICATION_SERVICE); 
-			Intent intent = new Intent(this, Alert.class);
-			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-			Notification noti = new Notification.Builder(this)
-			.setSmallIcon(android.R.drawable.stat_sys_warning)
-		        .setContentTitle("EMERGENCY ALERT DETECTED")
-		        .setContentText("Tornado warning detected").build();
-			NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-			notificationManager.notify(0,noti);
+			alert_name = "Tornado warning detected";
 		}
 		
-		/*start notification
-		
-			NotificationManager notificationManager = (NotificationManager) 
-					  getSystemService(NOTIFICATION_SERVICE); 
-			
-			Intent intent = new Intent(this, Alert.class);
-			PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-			Notification noti = new Notification.Builder(this)
-				.setSmallIcon(icon)
-		        .setContentTitle("EMERGENCY ALERT DETECTED")
-		        .setContentText(alert_name).build();
-			
-			NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-			
-			noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-
-			notificationManager.notify(0,noti);
-			
-			end notification*/
+		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		Notification noti = new Notification.Builder(this)
+			.setSmallIcon(icon)
+	        .setContentTitle("EMERGENCY ALERT DETECTED")
+	        .setContentText(alert_name).build();		
+		NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);		
+		noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+		notificationManager.notify(0,noti);
 			
 	}
 	
