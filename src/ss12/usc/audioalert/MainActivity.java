@@ -1,6 +1,10 @@
 package ss12.usc.audioalert;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -64,7 +68,12 @@ public class MainActivity extends Activity {
    final Handler h2 = new Handler(new Callback() { 
 		 
        public boolean handleMessage(Message msg) { 
-          endRecording();
+          try {
+			endRecording();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
           return false;
        }
    }); 
@@ -134,7 +143,7 @@ public class MainActivity extends Activity {
 		}
     }
     
-    public void endRecording()
+    public void endRecording() throws IOException
     {
     	setTimerOff();
     	
@@ -184,48 +193,46 @@ public class MainActivity extends Activity {
 	     * If any freq's amplitude (or the average of all these amplitudes) are above a certain value, ALERT
 	     * otherwise keep going
 	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
-	     *
-	     * BufferedReader br = new BufferedReader(new FileReader(SOUND_LIMITS_FILE_NAME));
-	     * int numRanges = Integer.parseInt(br.readLine());
-	     * int[] lowerFreqs = new int[numRanges];
-	     * int[] upperFreqs = new int[numRanges];
-	     * int[] lowerMags = new int[numRanges];
-	     * int[] alertTypes = new int[numRanges];
-	     * StringTokenizer st;
-	     * for(int i = 0; i < numRanges; i++)
-	     * {
-	     * 	st = new StringTokenizer(br.readLine());
-	     * 	lowerFreqs[i] = Integer.parseInt(st.nextToken());
-	     * upperFreqs[i] = Integer.parseInt(st.nextToken());
-	     * lowerMags[i] = Integer.parseInt(st.nextToken());
-	     * alertTypes[i] = Integer.parseInt(st.nextToken());
-	     * }
-	     * for(int a = 0; a < numRanges.length; a++)
-	     * {
-	     * 		boolean sendAlert = false;
-	     * 		for(int fmInd = 0; fmInd < fm_array_sorted.length; fmInd++)
-	     * 		{
-	     *			FreqMag fm = fm_array_sorted[fmInd];
-	     *			if(fm.freq > upperFreqs[a])
-	     *				break;
-	     *			if(fm.mag[fmInd] > lowerMags[a])
-	     *			{
-	     *				sendAlert = true;
-	     *				break;
-	     *			}
-	     *			if(fm.freq < lowerFreqs[a])
-	     *				continue;
-	     * 		}
-	     * 		if(sendAlert && !flag)
-	     * 		{
-	     * 			flag = true;
-	     * 			sendMessage(alertTypes[a]);
-	     * 		}
-	     * }
-	     * 
 	     */
-
+	     BufferedReader br = new BufferedReader(new FileReader(SOUND_LIMITS_FILE_NAME));
+	     int numRanges = Integer.parseInt(br.readLine());
+	     int[] lowerFreqs = new int[numRanges];
+	     int[] upperFreqs = new int[numRanges];
+	     int[] lowerMags = new int[numRanges];
+	     int[] alertTypes = new int[numRanges];
+	     StringTokenizer st;
+	     for(int i = 0; i < numRanges; i++)
+	     {
+	    	 st = new StringTokenizer(br.readLine());
+	    	 lowerFreqs[i] = Integer.parseInt(st.nextToken());
+	    	 upperFreqs[i] = Integer.parseInt(st.nextToken());
+	    	 lowerMags[i] = Integer.parseInt(st.nextToken());
+	    	 alertTypes[i] = Integer.parseInt(st.nextToken());
+	     }
+	     for(int a = 0; a < numRanges; a++)
+	     {
+	    	 boolean sendAlert = false;
+	    	 for(int fmInd = 0; fmInd < fm_array_sorted.length; fmInd++)
+	    	 {
+	    		 FreqMag fm = fm_array_sorted[fmInd];
+     			if(fm.freq > upperFreqs[a]) // already exceeded the range
+     				break;
+     			if(fm.mag > lowerMags[a]) // amplitude in range is high enough!
+     			{
+     				sendAlert = true;
+     				break;
+     			}
+      		}
+      		if(sendAlert && !flag)
+      		{
+      			flag = true;
+      			sendMessage(alertTypes[a]);
+      		}
+	     }
+	      
+	    
 	    // start old algorithm
+	    /*
 	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
 	    int ACount = 0; // alarm type: police siren
 	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
@@ -251,6 +258,7 @@ public class MainActivity extends Activity {
 	    	flag = true;
 	    	sendMessage(2);
 	    }
+	    */
 	    // end old algorithm
 	    setTimerOn();
     }
