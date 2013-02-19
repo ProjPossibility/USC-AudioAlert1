@@ -8,11 +8,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 
@@ -38,6 +41,7 @@ public class Alert extends Activity {
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		
 		TextView tv = (TextView)findViewById(R.id.textView1);
+		ImageView iv = (ImageView)findViewById(R.id.imageView1);
 		
 		long[] _pattern = new long[]{0,100,50,100,50,100};
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
@@ -46,30 +50,45 @@ public class Alert extends Activity {
 				  getSystemService(NOTIFICATION_SERVICE); 		
 		Intent intent = new Intent(this, Alert.class);
 		
-		int icon = android.R.drawable.stat_sys_warning;
+		int notiIcon = android.R.drawable.stat_sys_warning;
 		String alert_name = "";
+		
+		Resources res = getResources();
+		int resourceId = res.getIdentifier("tornado_icon", "drawable", getPackageName() );
 		
 		if(alertType == 1){
 			// 3 x long
-			tv.setText("Police Siren");
 			v.vibrate(_pattern2, 2);
-		    alert_name = "Police Siren detected";
+		    alert_name = "Police Siren";
+		    resourceId = res.getIdentifier("siren_icon", "drawable", getPackageName() );
 		}		
 		else if(alertType == 2){
 			// 6 x short
-			tv.setText("Tornado Warning");
 			v.vibrate(_pattern, 2);	
-			alert_name = "Tornado warning detected";
+			alert_name = "Tornado warning";
+			resourceId = res.getIdentifier("tornado_icon", "drawable", getPackageName() );
 		}
+		
+		// displays icon for each alert
+		iv.setImageResource(resourceId);
+		
+		// prints alert type to screen
+		tv.setText(alert_name);
 		
 		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		Notification noti = new Notification.Builder(this)
-			.setSmallIcon(icon)
+			.setSmallIcon(notiIcon)
 	        .setContentTitle("EMERGENCY ALERT DETECTED")
 	        .setContentText(alert_name).build();		
 		NotificationManager notiManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);		
 		noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(0,noti);
+		
+		View view= findViewById(R.id.laidout);
+	    final int red = Color.argb(255,225,0,0);
+	    view.setBackgroundColor(red);
+		
+		
 			
 	}
 	
@@ -80,6 +99,10 @@ public class Alert extends Activity {
 		long[] stopthis = new long[]{0,0};
 		v.vibrate(stopthis,0);
     	v.cancel();
+    	
+    	view= findViewById(R.id.laidout);
+    	final int white = Color.argb(255,225,225,225);
+	    view.setBackgroundColor(white);
 
 	    Intent intent = new Intent(this, MainActivity.class);
 	    //intent.putExtra("redo", true);
