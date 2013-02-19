@@ -54,19 +54,19 @@ public class Alert extends Activity {
 		String alert_name = "";
 		
 		Resources res = getResources();
-		int resourceId = res.getIdentifier("tornado_icon", "drawable", getPackageName() );
+		int resourceId = res.getIdentifier("", "drawable", getPackageName() );
 		
 		if(alertType == 1){
 			// 3 x long
 			v.vibrate(_pattern2, 2);
 		    alert_name = "Police Siren";
-		    resourceId = res.getIdentifier("siren_icon", "drawable", getPackageName() );
+		    resourceId = res.getIdentifier("siren", "drawable", getPackageName() );
 		}		
 		else if(alertType == 2){
 			// 6 x short
 			v.vibrate(_pattern, 2);	
 			alert_name = "Tornado warning";
-			resourceId = res.getIdentifier("tornado_icon", "drawable", getPackageName() );
+			resourceId = res.getIdentifier("tornado", "drawable", getPackageName() );
 		}
 		
 		// displays icon for each alert
