@@ -20,8 +20,9 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
+        public static final int TextView01=0x7f0a0003;
         public static final int button1=0x7f0a0000;
-        public static final int menu_settings=0x7f0a0003;
+        public static final int menu_settings=0x7f0a0004;
         public static final int textView1=0x7f0a0001;
         public static final int textView_status=0x7f0a0002;
     }
