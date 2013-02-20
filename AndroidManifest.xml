@@ -19,6 +19,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <service android:enabled="true" android:name=".MyService" />
         <activity
             android:name="ss12.usc.audioalert.MainActivity"
             android:label="@string/app_name"
