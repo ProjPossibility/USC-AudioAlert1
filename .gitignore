@@ -27,7 +27,9 @@ Thumbs.db
 # generated files
 bin/
 gen/
-gen/*
+gen/**
+gen/ss12/usc/audioalert/R.java
+/gen/ss12/usc/audioalert/R.java
 R.java
 
 
