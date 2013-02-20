@@ -110,8 +110,9 @@ public class Alert extends Activity {
     }
     
     @Override
-    public void onDestroy() {
-        super.onDestroy();  // Always call the superclass
+    public void onPause() {
+        super.onPause();  // Always call the superclass
+        finish();
     }
 
 	@Override

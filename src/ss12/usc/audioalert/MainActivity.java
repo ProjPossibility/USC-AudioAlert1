@@ -19,6 +19,7 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 
 // code for checking for finding a valid AudioRecord comes from this source:
 // http://stackoverflow.com/questions/4843739/audiorecord-object-not-initializing
@@ -286,6 +287,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        finish();
         // Another activity is taking focus (this activity is about to be "paused").
     }
     @Override
