@@ -59,8 +59,7 @@ public class Alert extends Activity {
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
 		
 		NotificationManager notificationManager = (NotificationManager) 
-				  getSystemService(NOTIFICATION_SERVICE); 		
-		Intent intent = new Intent(this, Alert.class);
+				  getSystemService(NOTIFICATION_SERVICE); 
 		
 		int notiIcon = android.R.drawable.stat_sys_warning;
 		String alert_name = "";
@@ -87,7 +86,6 @@ public class Alert extends Activity {
 		// prints alert type to screen
 		tv.setText(alert_name);
 		
-		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
 		Notification noti = new Notification.Builder(this)
 			.setSmallIcon(notiIcon)
 	        .setContentTitle("EMERGENCY ALERT DETECTED")
@@ -147,7 +145,7 @@ public class Alert extends Activity {
     @Override
     public void onPause() {
         super.onPause();  // Always call the superclass
-        finish();
+        //finish();
     }
 
 	@Override
