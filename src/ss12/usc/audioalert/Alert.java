@@ -97,7 +97,7 @@ public class Alert extends Activity {
 		final int red = Color.argb(255,225,0,0);
 		final int white = Color.argb(255,225,225,225);
 		
-            RelativeLayout flash = (RelativeLayout) findViewById(R.id.top_layout);
+            RelativeLayout flash = (RelativeLayout) findViewById(R.id.bottom_layout);
 
             ColorDrawable f = new ColorDrawable(red);
             ColorDrawable f2 = new ColorDrawable(white);
