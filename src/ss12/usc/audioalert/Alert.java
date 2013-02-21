@@ -1,18 +1,15 @@
 package ss12.usc.audioalert;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -22,15 +19,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-@SuppressLint("NewApi")
 public class Alert extends Activity {
 	
 	Vibrator v;
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,6 +30,7 @@ public class Alert extends Activity {
 		
 	}
 	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onResume(){
 		super.onResume();
