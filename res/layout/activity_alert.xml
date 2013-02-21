@@ -2,36 +2,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/laidout"
-    tools:context=".Alert" >
+    android:id="@+id/bottom_layout"
+    tools:context=".Alert"
+    android:background="#FF0000" >
 
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:onClick="okayStop"
-        android:text="@string/stop_button" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_marginBottom="48dp"
-        android:text="TextView"
-        android:textSize="24sp" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="17dp"
-        android:contentDescription="@string/icon_description"
-        android:src="@null" />
+    <RelativeLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+        android:id="@+id/top_layout"
+        android:layout_marginBottom="26dp" 
+        android:background="#fff" >
+    </RelativeLayout>
     
+     <Button
+	        android:id="@+id/button1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_centerHorizontal="true"
+	        android:layout_centerVertical="true"
+	        android:onClick="okayStop"
+	        android:text="@string/stop_button" />
+	
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/button1"
+	        android:layout_alignLeft="@+id/button1"
+	        android:layout_marginBottom="48dp"
+	        android:text="TextView"
+	        android:textSize="24sp" />
+	
+	    <ImageView
+	        android:id="@+id/imageView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_above="@+id/textView1"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginBottom="17dp"
+	        android:contentDescription="@string/icon_description"
+	        android:src="@null" />
+	
 </RelativeLayout>

@@ -10,12 +10,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -84,12 +87,33 @@ public class Alert extends Activity {
 		noti.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(0,noti);
 		
-		View view= findViewById(R.id.laidout);
+		/*
+		View view= findViewById(R.id.top_layout);
 	    final int red = Color.argb(255,225,0,0);
 	    view.setBackgroundColor(red);
+		*/
 		
+		final int DELAY = 100;
+		final int red = Color.argb(255,225,0,0);
+		final int white = Color.argb(255,225,225,225);
 		
-			
+            RelativeLayout flash = (RelativeLayout) findViewById(R.id.top_layout);
+
+            ColorDrawable f = new ColorDrawable(red);
+            ColorDrawable f2 = new ColorDrawable(white);
+
+            AnimationDrawable a = new AnimationDrawable();
+            
+            while (true)
+            {
+	            a.addFrame(f, DELAY);
+	            a.addFrame(f2, DELAY);
+	            a.setOneShot(false);
+	
+	            flash.setBackground(a);
+	            a.start();
+            }
+         
 	}
 	
 	
@@ -100,9 +124,11 @@ public class Alert extends Activity {
 		v.vibrate(stopthis,0);
     	v.cancel();
     	
-    	view= findViewById(R.id.laidout);
+    	/*
+    	view= findViewById(R.id.top_layout);
     	final int white = Color.argb(255,225,225,225);
 	    view.setBackgroundColor(white);
+	    */
 
 	    Intent intent = new Intent(this, MainActivity.class);
 	    //intent.putExtra("redo", true);

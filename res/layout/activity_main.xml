@@ -23,4 +23,5 @@
         android:text="Recording is active."
         android:textSize="18sp" />
 
+
 </RelativeLayout>
