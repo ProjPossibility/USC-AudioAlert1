@@ -23,12 +23,11 @@ public class Alert extends Activity {
 	
 	Vibrator v;
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_alert);
-		
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_alert);
+    }
 	
 	@SuppressLint("NewApi")
 	@Override
@@ -93,7 +92,7 @@ public class Alert extends Activity {
 	    view.setBackgroundColor(red);
 		*/
 		
-		final int DELAY = 100;
+		final int DELAY = 750;
 		final int red = Color.argb(255,225,0,0);
 		final int white = Color.argb(255,225,225,225);
 		
@@ -102,18 +101,16 @@ public class Alert extends Activity {
             ColorDrawable f = new ColorDrawable(red);
             ColorDrawable f2 = new ColorDrawable(white);
 
-            AnimationDrawable a = new AnimationDrawable();
+           AnimationDrawable a = new AnimationDrawable();
             
-            while (true)
-            {
-	            a.addFrame(f, DELAY);
-	            a.addFrame(f2, DELAY);
-	            a.setOneShot(false);
-	
-	            flash.setBackground(a);
-	            a.start();
-            }
-         
+            a.addFrame(f, DELAY);
+            a.addFrame(f2, DELAY);
+            
+            flash.setBackground(a);      
+            
+            a.setOneShot(false);
+            a.start();
+            
 	}
 	
 	
