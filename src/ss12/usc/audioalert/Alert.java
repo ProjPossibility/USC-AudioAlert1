@@ -50,7 +50,7 @@ public class Alert extends Activity {
 		
 		long[] _pattern = new long[]{0,100,50,100,50,100};
 		long[] _pattern2 = new long[]{0,50,50,50,50,50,50,50,50,50,50,50};
-		long[] _pattern3 = new long[]{0,50,50,50,50,100,50,100,50};
+		long[] _pattern3 = new long[]{0,30,150,30,150,30,150,30,150};
 		
 		NotificationManager notificationManager = (NotificationManager) 
 				  getSystemService(NOTIFICATION_SERVICE); 
@@ -76,7 +76,7 @@ public class Alert extends Activity {
 		else if(alertType == 3){
 			v.vibrate(_pattern3, 2);	
 			alert_name = "Smoke Alarm";
-			resourceId = res.getIdentifier("tornado", "drawable", getPackageName() );
+			resourceId = res.getIdentifier("smoke", "drawable", getPackageName() );
 		}
 		
 		// displays icon for each alert
