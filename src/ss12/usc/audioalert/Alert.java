@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +35,14 @@ public class Alert extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_alert);
+		
+	}
+	
+	@Override
+	protected void onResume(){
+		super.onResume();
+		
+        Log.d("AlertActivity", "In onResume!");
 		
 		//Intent i=new Intent(getApplicationContext(), sample.class);
         //i.putExtra("id", id);
