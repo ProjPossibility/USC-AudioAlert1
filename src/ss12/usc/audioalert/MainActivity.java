@@ -1,8 +1,8 @@
 package ss12.usc.audioalert;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.Timer;
@@ -19,7 +19,6 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 
 // code for checking for finding a valid AudioRecord comes from this source:
 // http://stackoverflow.com/questions/4843739/audiorecord-object-not-initializing
@@ -196,7 +195,8 @@ public class MainActivity extends Activity {
 	     * otherwise keep going
 	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
 	     */
-	     BufferedReader br = new BufferedReader(new FileReader(SOUND_LIMITS_FILE_NAME));
+	     //BufferedReader br = new BufferedReader(new FileReader());
+	     BufferedReader br = new BufferedReader(new StringReader("2\n1200 1500 5000 1\n1000 1200 5000 2"));
 	     int numRanges = Integer.parseInt(br.readLine());
 	     int[] lowerFreqs = new int[numRanges];
 	     int[] upperFreqs = new int[numRanges];
