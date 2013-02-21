@@ -22,6 +22,7 @@ import android.widget.TextView;
 public class Alert extends Activity {
 	
 	Vibrator v;
+	AnimationDrawable a;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class Alert extends Activity {
             ColorDrawable f = new ColorDrawable(red);
             ColorDrawable f2 = new ColorDrawable(white);
 
-           AnimationDrawable a = new AnimationDrawable();
+            a = new AnimationDrawable();
             
             a.addFrame(f, DELAY);
             a.addFrame(f2, DELAY);
@@ -115,7 +116,7 @@ public class Alert extends Activity {
 	
 	
     public void okayStop(View view) {
-
+    	a.stop();
 		v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 		long[] stopthis = new long[]{0,0};
 		v.vibrate(stopthis,0);

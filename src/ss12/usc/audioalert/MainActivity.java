@@ -100,8 +100,10 @@ public class MainActivity extends Activity {
         Log.d("MainActivity", "In onResume!");
     	super.onResume();
 
-        if(getIntent() != null)
+        if(getIntent() != null){
+        	Log.d("MainActivity", "My name is the flag and I have been made false.");
         	flag = false;
+        }
         
 		recorder = null;	
 		for (int rate : mSampleRates) {
@@ -196,7 +198,7 @@ public class MainActivity extends Activity {
 	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
 	     */
 	     //BufferedReader br = new BufferedReader(new FileReader());
-	     BufferedReader br = new BufferedReader(new StringReader("2\n1200 1500 3000 1\n1000 1200 3000 2"));
+	     BufferedReader br = new BufferedReader(new StringReader("2\n1200 1500 500 1\n1000 1200 500 2"));
 	     int numRanges = Integer.parseInt(br.readLine());
 	     int[] lowerFreqs = new int[numRanges];
 	     int[] upperFreqs = new int[numRanges];
