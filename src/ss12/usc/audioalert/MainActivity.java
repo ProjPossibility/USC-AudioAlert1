@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
 	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
 	     */
 	     //BufferedReader br = new BufferedReader(new FileReader());
-	     BufferedReader br = new BufferedReader(new StringReader("3\n1200 1500 3000 1\n1000 1200 3000 2\n1500 2000 3000 3"));
+	     BufferedReader br = new BufferedReader(new StringReader("3\n1200 1500 4000 1\n1000 1200 4000 2\n1500 2000 4000 3"));
 	     int numRanges = Integer.parseInt(br.readLine());
 	     int[] lowerFreqs = new int[numRanges];
 	     int[] upperFreqs = new int[numRanges];
