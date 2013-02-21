@@ -217,11 +217,13 @@ public class MainActivity extends Activity {
 	    	 for(int fmInd = 0; fmInd < fm_array_sorted.length; fmInd++)
 	    	 {
 	    		 FreqMag fm = fm_array_sorted[fmInd];
-	    		 Log.d("MainActivity FM", "Freq = " + fm.freq + "; Mag = " + fm.mag);
      			if(fm.freq > upperFreqs[a]) // already exceeded the range
      				break;
+     			if(fm.freq < lowerFreqs[a])
+     				continue;
      			if(fm.mag > lowerMags[a]) // amplitude in range is high enough!
      			{
+     				Log.d("MainActivity FM", "Freq = " + fm.freq + "; Mag = " + fm.mag);
      				sendAlert = true;
      				break;
      			}
