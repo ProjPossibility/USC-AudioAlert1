@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
             h.sendEmptyMessage(0); 
         }
 	};
-	final Handler h = new Handler(new Callback() { 
+	final Handler h = new Handler(new Callback() {
 		 
         public boolean handleMessage(Message msg) { 
            long millis = System.currentTimeMillis() - starttime;
@@ -71,7 +71,6 @@ public class MainActivity extends Activity {
           try {
 			endRecording();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
           return false;
@@ -82,7 +81,6 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // The activity is being created.
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,14 +88,12 @@ public class MainActivity extends Activity {
         return true;
     }    
     @Override
-    protected void onStart() {
+    protected void onStart() {	
         super.onStart();
-        // The activity is about to become visible.
     }
     
     @Override
     protected void onResume() {
-        Log.d("MainActivity", "In onResume!");
     	super.onResume();
 
         if(getIntent() != null){
@@ -134,13 +130,10 @@ public class MainActivity extends Activity {
 			int channel_config = recorder.getChannelConfiguration();
 			int format = recorder.getAudioFormat();
 			bufferSize = AudioRecord.getMinBufferSize(sampleSize, channel_config, format);
-			// ^ this it the buffersize used later!
 			audioBuffer = new byte[bufferSize];
 			Log.i("MainActivity", "Started recording at time " + System.currentTimeMillis() + "!");
 			
 			setTimerOn();
-			// split
-			
 		} else {
 			Log.e("MainActivity", "No supported audio format found");
 		}
@@ -150,7 +143,6 @@ public class MainActivity extends Activity {
     {
     	setTimerOff();
     	
-    	// here goes nothing...
     	Log.i("MainActivity", "Stopped recording at time " + System.currentTimeMillis() + "!");
     	int newBufferSize = 1;
 		while(newBufferSize < bufferSize)
@@ -189,30 +181,21 @@ public class MainActivity extends Activity {
 	    	fm_array_sorted[a] = fm_array[a];
 	    Arrays.sort(fm_array_sorted); // sorted by frequencies, increasing order
 
-	    /*
-	     * New algorithm: Read in from text file 
-	     * Look at frequencies only within certain range
-	     * Look at target range of frequencies (e.g. for police siren, 1200 to 1500)
-	     * If any freq's amplitude (or the average of all these amplitudes) are above a certain value, ALERT
-	     * otherwise keep going
-	     *  alternatively, perhaps keep a list of all alerts that have been detected and display them all at once
-	     */
-	     //BufferedReader br = new BufferedReader(new FileReader());
-	     BufferedReader br = new BufferedReader(new StringReader("3\n1200 1500 4000 1\n1000 1200 4000 2\n1500 2000 4000 3"));
-	     int numRanges = Integer.parseInt(br.readLine());
-	     int[] lowerFreqs = new int[numRanges];
-	     int[] upperFreqs = new int[numRanges];
-	     int[] lowerMags = new int[numRanges];
-	     int[] alertTypes = new int[numRanges];
-	     StringTokenizer st;
-	     for(int i = 0; i < numRanges; i++)
-	     {
-	    	 st = new StringTokenizer(br.readLine());
-	    	 lowerFreqs[i] = Integer.parseInt(st.nextToken());
-	    	 upperFreqs[i] = Integer.parseInt(st.nextToken());
-	    	 lowerMags[i] = Integer.parseInt(st.nextToken());
-	    	 alertTypes[i] = Integer.parseInt(st.nextToken());
-	     }
+		 BufferedReader br = new BufferedReader(new StringReader("3\n1200 1500 4000 1\n1000 1200 4000 2\n1500 2000 4000 3"));
+		 int numRanges = Integer.parseInt(br.readLine());
+		 int[] lowerFreqs = new int[numRanges];
+		 int[] upperFreqs = new int[numRanges];
+		 int[] lowerMags = new int[numRanges];
+		 int[] alertTypes = new int[numRanges];
+		 StringTokenizer st;
+		 for(int i = 0; i < numRanges; i++)
+		 {
+			 st = new StringTokenizer(br.readLine());
+			 lowerFreqs[i] = Integer.parseInt(st.nextToken());
+			 upperFreqs[i] = Integer.parseInt(st.nextToken());
+			 lowerMags[i] = Integer.parseInt(st.nextToken());
+			 alertTypes[i] = Integer.parseInt(st.nextToken());
+		 }
 	     for(int a = 0; a < numRanges; a++)
 	     {
 	    	 boolean sendAlert = false;
@@ -236,38 +219,8 @@ public class MainActivity extends Activity {
       			sendMessage(alertTypes[a]);
       		}
 	     }
-	      
-	    
-	    // start old algorithm
-	    /*
-	    double limLowerA = 1200, limUpperA = 1500, minAmpA = 5000;
-	    int ACount = 0; // alarm type: police siren
-	    double limLowerB = 1000, limUpperB = 1200, minAmpB = 5000;
-	    int BCount = 0;	// alarm type: tornado warning
-	    
-	    int threshold = 2;
-	    for(int a = 0; a < NUM_TOP_MAGNITUDES; a++)
-	    {
-	    	double theFreq = fm_array_sorted[a].freq;
-	    	if(theFreq >= limLowerA && theFreq <= limUpperA)
-	    		ACount++;
-	    	if(theFreq >= limLowerB && theFreq <= limUpperB)
-	    		BCount++;
-	    }
-	    
-	    if(ACount >= threshold && !flag)
-	    {
-	    	flag = true;
-	    	sendMessage(1);
-	    }
-	    else if(BCount >= threshold && !flag)
-	    {
-	    	flag = true;
-	    	sendMessage(2);
-	    }
-	    */
-	    // end old algorithm
-	    setTimerOn();
+	     
+     	setTimerOn();
     }
     
     public void sendMessage(int alertType) {
@@ -293,30 +246,15 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        //finish();
-        // Another activity is taking focus (this activity is about to be "paused").
     }
     @Override
     protected void onStop() {
         super.onStop();
-        // The activity is no longer visible (it is now "stopped")
     }    
     @Override
     public void onDestroy() {
-        super.onDestroy();  // Always call the superclass
+        super.onDestroy();
     }
-    
-    /*
-    if(start == 1)
-    CODE
-    
-    start = 0
-    SEND MESSAGE
-    
-    ALERT:
-    	send back to main
-    	start = 1
-    	*/
     
     public double getFreq(int index, int fs, int N)
     {
@@ -337,6 +275,7 @@ class FreqMag implements Comparable<FreqMag>
 	{
 		return "" + freq + " " + mag;
 	}
+	
 	public int compareTo(FreqMag other)
 	{
 		return (int)(Double.compare(freq, other.freq));

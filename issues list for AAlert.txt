@@ -1,0 +1,22 @@
+1)	Determine what alert types the app should detect
+
+2)	Fix bug where app must be restarted after one alert
+
+3)	Implement detection for an arbitrary number of alert types
+
+4)	Refine algorithm for identifying alerts
+- look at frequencies only within a certain range ()
+
+5)	Implement flashing background on Alert activity
+
+6)	Allow app to run in background
+
+7)	Create icons (menu icon, icons for alert types)	
+
+8)	Make user interface more appealing/cleaner
+
+tornado siren
+police siren
+fire truck siren
+gunshots
+car horn

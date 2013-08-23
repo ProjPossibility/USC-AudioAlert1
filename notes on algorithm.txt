@@ -1,0 +1,28 @@
+(ambient background refers to all the "noise" around the phone. When I refer to noise below, it means "junk" noise that doesn't correspond to any alert)
+1) Initializing
+	The program must initialize an AudioRecord object to read in microphone data. To do this, determine the phone's audio settings: check which audio format (8bit, 16 bit), channel configuration (mono/stereo), and sample rates (in Hz) are supported, and use these settings to record ambient background.
+2) Recording
+	The phone will use a timer to record a sample of the ambient background on regular intervals (in this case, 50 ms). After obtaining each sample it will analyze it.
+3) Analyzing: FFT
+	Description: FFT is the faster version of the Fourier transform. It is commonly used to analyze the magnitude vs. frequency audio spectrum of a sound sample. Basically it will determine which combination of sinusoidal waves, when added together or superimposed, will produce the desired sample wave.
+	Algorithm: The audio data is read in as an array of bytes. Each byte of audio data is converted to an imgainary number with real part b and imaginary part 0. The array is padded with 0's at the end since we're using a version of FFT that must take in an array whose size is a power of 2.
+4) Analyzing: Thresholds
+	We assume that a particular alert type is made up of one or more frequencies. We check the resulting FFT spectrum if these frequencies reach a certain magnitude. If they do, we prepare to alert the user of this alert. If there is no alert in the ambient background, a new sample is recorded.
+(Note: in future work only, state that we currently only test for one target frequency, but in the future we can theoretically distinguish alert types that emit multiple frequencies)
+5) Alerting
+	Switch to Alert activity (previously was in MainActivity while recording). Screen flashes in AlertActivity and the name of alert type is displayed, and the phone will undergo a distinct pattern of rumbles depending on the alert type. The user can press the soft button or the phone's back button to acknowledge the alert and resume recording.
+
+A) Detect device's audio settings
+Bit rate, channel configuration, sample rates
+Record a sample periodically
+Analyze audio sample (described next slide)
+If audio sample matches certain frequency/amplitude criteria, send appropriate alert type
+User acknowledges alert; app resumes recording
+
+B) FFT (Fast Fourier Transform)
+Faster version of the Fourier analysis
+Audio input is read in as bytes and mapped to imaginary numbers
+Analyzes the amplitude vs. frequency distribution of the sound sample
+Determine if sound sample's FFT contains particular frequencies that reach a certain amplitude
+E.g. a frequency between appx. 1000-1200 Hz with a high enough amplitude corresponds to a tornado warning
+App can pick out particular frequencies even with lots of background "junk" noise, so algorithm can even theoretically distinguish alarms that emit multiple frequencies
